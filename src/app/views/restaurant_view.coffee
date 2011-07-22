@@ -23,24 +23,17 @@ class exports.RestaurantView extends Backbone.View
       view = new PlateView(model: plate)
       $plates.append view.render().el
     )
-    $plates.append $('<div class="clear"></div>')
     @_updateWrapperHeight()
     @
   
   add: ->
-    @model.add new Plate(price: 1, color: '#F00')
-      
+    @model.create(price: 1, color: '#F00')
+     
   remove: ->
-    @model.remove @model.last()
+    last = @model.last()
+    @model.remove last
+    console.log("de");
+    last.destroy()
     
-  # updateCount: -> 
-  #   info = _.reduce(@model.models, (info, plate) -> 
-  #     info.count += plate.get('count')
-  #     info.price += plate.get('count') * plate.get('price')
-  #     info
-  #   , {count: 0, price: 0});
-  #   $('#count em').html info.count
-  #   $('#total em').html info.price
-  # 
   _updateWrapperHeight: -> 
     @.$('#wrapper').height window.innerHeight - 45 * 2 + "px"

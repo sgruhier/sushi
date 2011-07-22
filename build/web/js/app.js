@@ -3332,7 +3332,6 @@ iScroll.prototype = {
 		that.maxScrollY = that.scrollHeight - that.scrollerHeight;
 		that.directionX = 0;
 		that.directionY = 0;
-console.log(that.scrollHeight, that.scrollerHeight);
 		if (that.scrollX) {
 			if (that.maxScrollX >= 0) {
 				resetX = 0;
@@ -12472,32 +12471,6 @@ window.jQuery = window.$ = jQuery;
     }
     Restaurant.prototype.model = Plate;
     Restaurant.prototype.localStorage = new Store("sushi");
-    Restaurant.prototype.initialize = function() {
-      this.add(new Plate({
-        price: 1,
-        color: '#F00'
-      }));
-      this.add(new Plate({
-        price: 2,
-        color: '#0F0'
-      }));
-      this.add(new Plate({
-        price: 3,
-        color: '#00F'
-      }));
-      this.add(new Plate({
-        price: 4,
-        color: '#F0F'
-      }));
-      this.add(new Plate({
-        price: 5,
-        color: '#FF0'
-      }));
-      return this.add(new Plate({
-        price: 6,
-        color: '#0FF'
-      }));
-    };
     return Restaurant;
   })();
 }).call(this);
@@ -12541,7 +12514,8 @@ window.jQuery = window.$ = jQuery;
       app.views.restaurant = new RestaurantView({
         model: app.models.restaurant
       });
-      return app.controllers.main = new MainController;
+      app.controllers.main = new MainController;
+      return app.models.restaurant.fetch();
     };
     app.initialize();
     Backbone.history.start();
@@ -12578,6 +12552,7 @@ window.jQuery = window.$ = jQuery;
       currency: '€',
       count: 0
     };
+    Plate.prototype.localStorage = new Store("sushi");
     Plate.prototype.initialize = function() {};
     Plate.prototype.increment = function() {
       return this.set({
@@ -12684,7 +12659,52 @@ window.jQuery = window.$ = jQuery;
       __out.push('Plate at ');
       __out.push(__sanitize(this.model.get('price')));
       __out.push(__sanitize(this.model.get('currency')));
-      __out.push(' <a href="#" class="edit_plate">Edit</a><span class="color"></span>\n');
+      __out.push('<span class="color"></span>\n');
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/plate_editor": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      __out.push('coucou');
     }).call(this);
     
   }).call(__obj);
@@ -12735,7 +12755,36 @@ window.jQuery = window.$ = jQuery;
   }).call(__obj);
   __obj.safe = __objSafe, __obj.escape = __escape;
   return __out.join('');
-}}, "views/plate_view": function(exports, require, module) {(function() {
+}}, "views/plate_editor_view": function(exports, require, module) {(function() {
+  var plateEditorTemplate;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  plateEditorTemplate = require('templates/plate_editor');
+  exports.PlateEditorView = (function() {
+    __extends(PlateEditorView, Backbone.View);
+    function PlateEditorView() {
+      PlateEditorView.__super__.constructor.apply(this, arguments);
+    }
+    PlateEditorView.prototype.initialize = function() {
+      _.bindAll(this, 'render');
+      return this.model.bind('change', this.render);
+    };
+    PlateEditorView.prototype.render = function() {
+      $(this.el).html(plateEditorTemplate({
+        model: this.model
+      }));
+      return this;
+    };
+    return PlateEditorView;
+  })();
+}).call(this);
+}, "views/plate_view": function(exports, require, module) {(function() {
   var plateTemplate;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
@@ -12752,12 +12801,12 @@ window.jQuery = window.$ = jQuery;
       PlateView.__super__.constructor.apply(this, arguments);
     }
     PlateView.prototype.tagName = 'li';
+    PlateView.prototype.className = 'arrow';
     PlateView.prototype.events = {
-      'tap': 'increment'
+      'click': 'edit'
     };
     PlateView.prototype.initialize = function() {
       _.bindAll(this, 'render');
-      $(this.el).addSwipeEvents();
       return this.model.bind('change', this.render);
     };
     PlateView.prototype.render = function() {
@@ -12771,9 +12820,7 @@ window.jQuery = window.$ = jQuery;
       });
       return this;
     };
-    PlateView.prototype.increment = function() {
-      return this.model.increment();
-    };
+    PlateView.prototype.edit = function() {};
     return PlateView;
   })();
 }).call(this);
@@ -12817,18 +12864,21 @@ window.jQuery = window.$ = jQuery;
         });
         return $plates.append(view.render().el);
       });
-      $plates.append($('<div class="clear"></div>'));
       this._updateWrapperHeight();
       return this;
     };
     RestaurantView.prototype.add = function() {
-      return this.model.add(new Plate({
+      return this.model.create({
         price: 1,
         color: '#F00'
-      }));
+      });
     };
     RestaurantView.prototype.remove = function() {
-      return this.model.remove(this.model.last());
+      var last;
+      last = this.model.last();
+      this.model.remove(last);
+      console.log("de");
+      return last.destroy();
     };
     RestaurantView.prototype._updateWrapperHeight = function() {
       return this.$('#wrapper').height(window.innerHeight - 45 * 2 + "px");

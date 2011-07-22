@@ -4,6 +4,7 @@ class exports.Plate extends Backbone.Model
     color: '#F00'
     currency: '€'
     count: 0
+  localStorage: new Store("sushi")
 
   initialize: -> 
 

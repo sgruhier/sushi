@@ -2,12 +2,12 @@ plateTemplate = require('templates/plate')
 
 class exports.PlateView extends Backbone.View
   tagName: 'li'
+  className: 'arrow'
   events: 
-    'tap': 'increment'
+    'click': 'edit'
 
   initialize: ->
     _.bindAll(@, 'render')
-    $(@.el).addSwipeEvents()
     @model.bind('change', @render)
     
   render: ->
@@ -16,9 +16,7 @@ class exports.PlateView extends Backbone.View
     $(@.el).find('.color').css(background: color)
     @
 
-  increment: ->
-    @model.increment()
-    # Force refresh !!!! (iphone only bug, may be due to iScroll?)
-    # $(@.el).hide().show()
+  edit: ->
+     
     
   

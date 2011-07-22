@@ -1,1 +1,1 @@
-Plate at <%= @model.get('price') %><%= @model.get('currency') %> <a href="#" class="edit_plate">Edit</a><span class="color"></span>
+Plate at <%= @model.get('price') %><%= @model.get('currency') %><span class="color"></span>

@@ -14,7 +14,9 @@ $(document).ready ->
     app.models.restaurant = new Restaurant
     app.views.restaurant  = new RestaurantView(model: app.models.restaurant)
     app.controllers.main  = new MainController
-
+    
+    app.models.restaurant.fetch()
+    
   app.initialize()
   Backbone.history.start()
 
