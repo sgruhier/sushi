@@ -1,0 +1,4 @@
+<span>
+  <%= @model.get('price') %><%= @model.get('currency') %>
+</span>
+<span class="count"><%= @model.get('count') %></span>

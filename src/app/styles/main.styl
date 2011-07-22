@@ -1,0 +1,75 @@
+@import "reset"
+
+body
+  font bold 18px "Helvetica Neue", Arial, Helvetica, sans-serif
+  font-family 'Ovo', serif
+  overflow none
+  
+a, avisited
+  color #F95A5A
+  text-decoration none
+
+ahover
+  color #665248
+
+.clear 
+  clear both
+  
+#plates
+  
+  .plate
+    float left
+    width 100px
+    height 100px
+    margin 15px 30px 
+    border-radius 100px
+    text-align center
+    text-shadow 2px 2px 2px #FFF
+  
+    span
+      float left
+      font-size 40px
+      width 100%
+      margin-top 10px
+
+    span.count
+      font-size 20px
+      
+#wrapper 
+  position relative
+  z-index 1
+  width 100%
+  overflow hidden
+
+section .bottom 
+  background-image -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222))
+  
+.bottom
+  font-family inherit
+  font-weight bold
+  color #fff
+  text-shadow rgba(0, 0, 0, 0.5) 0px -1px 0
+  text-overflow ellipsis
+  text-decoration none
+  white-space nowrap
+  background none
+  text-shadow 1px 1px 1px #000
+
+  
+.bottom a
+  font-size 12px
+  position absolute
+  overflow hidden
+  margin 0
+  border-width 0 5px
+  padding 0 3px
+  width auto
+  height 30px
+  line-height 30px
+  -webkit-border-image url(../../images/button.png) 0 5 0 5
+  color inherit
+
+.bottom a#reset
+  top 8px
+  right 6px
+  

@@ -1,0 +1,23 @@
+html{margin:0;padding:0;border:0}
+body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,code,del,dfn,em,img,q,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,dialog,figure,footer,header,hgroup,nav,section{margin:0;padding:0;border:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline}
+article,aside,dialog,figure,footer,header,hgroup,nav,section{display:block}
+body{line-height:1.5;background:#fff}
+table{border-collapse:separate;border-spacing:0}
+caption,th,td{text-align:left;font-weight:normal;float:none}
+table,th,td{vertical-align:middle}
+blockquote:before,blockquote:after,q:before,q:after{content:""}
+blockquote,q{quotes:"" ""}
+a img{border:none}
+:focus{outline:0}
+body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none}
+a,avisited{color:#f95a5a;text-decoration:none}
+ahover{color:#665248}
+.clear{clear:both}
+#plates .plate{float:left;width:100px;height:100px;margin:15px 30px;border-radius:100px;text-align:center;text-shadow:2px 2px 2px #fff;}
+#plates .plate span{float:left;font-size:40px;width:100%;margin-top:10px}
+#plates .plate span.count{font-size:20px}
+#wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
+section .bottom{background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0,#999),color-stop(.02,#666),color-stop(1,#222))}
+.bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}
+.bottom a{font-size:12px;position:absolute;overflow:hidden;margin:0;border-width:0 5px;padding:0 3px;width:auto;height:30px;line-height:30px;-webkit-border-image:url("../../images/button.png") 0 5 0 5;color:inherit}
+.bottom a#reset{top:8px;right:6px}

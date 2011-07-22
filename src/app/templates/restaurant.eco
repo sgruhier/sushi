@@ -1,0 +1,14 @@
+<div class="toolbar">
+  <h1>Sushi</h1>
+</div>
+
+<div id="wrapper">
+  <div id="plates">
+  </div>          
+</div>
+
+<div class="toolbar bottom">
+  <span id="count">Plates: <em>0</em></span>
+  <span id="total">Total: <em>0</em> €</span>
+  <a href="#" id="reset">Reset</a>
+</div>
