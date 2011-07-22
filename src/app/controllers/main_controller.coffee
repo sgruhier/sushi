@@ -1,6 +1,9 @@
-class exports.MainController extends Backbone.Controller
+
+class exports.MainController extends Backbone.Router
   routes :
     "": "home"
 
+  initialize: ->
+    
   home: ->
-    $('body').html app.views.home.render().el
+    $('body').html app.views.restaurant.render().el

@@ -1,25 +1,25 @@
 restaurantTemplate = require('templates/restaurant')
-Restaurant         = require('collections/restaurant').Restaurant
 PlateView          = require('views/plate_view').PlateView
+Plate              = require('models/plate').Plate
 
 class exports.RestaurantView extends Backbone.View
   tagName: 'section'
   className: 'current'
   
   events: 
-    'click #reset': 'reset'
+    'click #add': 'add'
+    'click #remove': 'remove'
   
   initialize: -> 
-    @restaurant = new Restaurant
-    _.bindAll(@, 'updateCount')
-    @restaurant.bind('change', @updateCount)
+    _.bindAll(@, 'render')
+    @model.bind('all', @render)
     @
     
   render: ->
     $(@.el).html restaurantTemplate()
     $plates = @.$("#plates")
 
-    @restaurant.each( (plate) ->
+    @model.each( (plate) ->
       view = new PlateView(model: plate)
       $plates.append view.render().el
     )
@@ -27,18 +27,20 @@ class exports.RestaurantView extends Backbone.View
     @_updateWrapperHeight()
     @
   
-  reset: ->
-    if confirm("Are you sure to reset, total will be set to 0")
-      @restaurant.invoke('set', count:0)
+  add: ->
+    @model.add new Plate(price: 1, color: '#F00')
       
-  updateCount: -> 
-    info = _.reduce(@restaurant.models, (info, plate) -> 
-      info.count += plate.get('count')
-      info.price += plate.get('count') * plate.get('price')
-      info
-    , {count: 0, price: 0});
-    $('#count em').html info.count
-    $('#total em').html info.price
-
+  remove: ->
+    @model.remove @model.last()
+    
+  # updateCount: -> 
+  #   info = _.reduce(@model.models, (info, plate) -> 
+  #     info.count += plate.get('count')
+  #     info.price += plate.get('count') * plate.get('price')
+  #     info
+  #   , {count: 0, price: 0});
+  #   $('#count em').html info.count
+  #   $('#total em').html info.price
+  # 
   _updateWrapperHeight: -> 
     @.$('#wrapper').height window.innerHeight - 45 * 2 + "px"

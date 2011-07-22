@@ -130,7 +130,7 @@ iScroll.prototype = {
 		that.maxScrollY = that.scrollHeight - that.scrollerHeight;
 		that.directionX = 0;
 		that.directionY = 0;
-
+console.log(that.scrollHeight, that.scrollerHeight);
 		if (that.scrollX) {
 			if (that.maxScrollX >= 0) {
 				resetX = 0;

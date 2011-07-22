@@ -16,24 +16,27 @@ ahover
   clear both
   
 #plates
-  
-  .plate
-    float left
-    width 100px
-    height 100px
-    margin 15px 30px 
-    border-radius 100px
-    text-align center
-    text-shadow 2px 2px 2px #FFF
-  
-    span
-      float left
-      font-size 40px
-      width 100%
-      margin-top 10px
 
-    span.count
-      font-size 20px
+  span
+    float right
+    color: #DDD
+    width 50px
+    height 20px
+
+  a
+    font-size 12px
+    float right
+    overflow hidden
+    margin 0
+    border-width 0 5px
+    padding 0 3px
+    width auto
+    height 30px
+    line-height 30px
+    -webkit-border-image url(../../images/greenButton.png) 0 5 0 5
+    color #EEE
+    margin -7px 10px 0 10px
+
       
 #wrapper 
   position relative
@@ -58,7 +61,7 @@ section .bottom
   
 .bottom a
   font-size 12px
-  position absolute
+  float left
   overflow hidden
   margin 0
   border-width 0 5px
@@ -68,6 +71,7 @@ section .bottom
   line-height 30px
   -webkit-border-image url(../../images/button.png) 0 5 0 5
   color inherit
+  margin-left 10px
 
 .bottom a#reset
   top 8px

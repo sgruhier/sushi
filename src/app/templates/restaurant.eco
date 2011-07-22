@@ -1,14 +1,13 @@
 <div class="toolbar">
-  <h1>Sushi</h1>
+  <h1>Sushi Plates</h1>
 </div>
 
 <div id="wrapper">
-  <div id="plates">
-  </div>          
+  <ul id="plates" class="menu">
+  </ul>          
 </div>
 
 <div class="toolbar bottom">
-  <span id="count">Plates: <em>0</em></span>
-  <span id="total">Total: <em>0</em> €</span>
-  <a href="#" id="reset">Reset</a>
+  <a href="#" id="add">Add</a>
+  <a href="#" id="remove">Remove last</a>
 </div>
