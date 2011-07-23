@@ -3,7 +3,7 @@
 </div>
 
 <div class="wrapper">
-  <ul id="plates" class="menu">
+  <ul id="plates" class="menu scrollable">
   </ul>          
 </div>
 

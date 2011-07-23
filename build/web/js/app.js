@@ -4002,23 +4002,11 @@ window.iScroll = iScroll;
   app.routers = {};
   app.models = {};
   app.views = {};
-  require('utils/zepto-ext');
+  require('utils/iphone');
   ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
   RestaurantView = require('views/restaurant_view').RestaurantView;
   $(document).ready(function() {
-    var setupIScroll;
-    setupIScroll = function() {
-      return _.defer(function() {
-        var scroller;
-        if (scroller) {
-          scroller.destroy();
-        }
-        if ($('#plates').length > 0) {
-          return scroller = new iScroll('plates');
-        }
-      });
-    };
     app.initialize = function() {
       app.models.restaurant = new Restaurant;
       app.views.restaurant = new RestaurantView({
@@ -4029,11 +4017,8 @@ window.iScroll = iScroll;
     };
     app.initialize();
     Backbone.history.start();
-    setupIScroll();
-    return app.models.restaurant.bind('add', setupIScroll).bind('remove', setupIScroll);
-  });
-  document.addEventListener('touchmove', function(e) {
-    return e.preventDefault();
+    $.setupIScroll();
+    return app.models.restaurant.bind('add', $.setupIScroll).bind('remove', $.setupIScroll);
   });
 }).call(this);
 }, "models/plate": function(exports, require, module) {(function() {
@@ -4074,7 +4059,7 @@ window.iScroll = iScroll;
     };
     return Plate;
   })();
-  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
+  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000", "ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
   var PlateEditorView;
@@ -4253,13 +4238,13 @@ window.iScroll = iScroll;
   (function() {
     (function() {
       var color, _i, _len, _ref;
-      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul class="menu">\n    <li>Price <input class="price" type="text" value="');
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <div class="scrollable">\n    <ul class="menu">\n      <li>Price <input class="price" type="text" value="');
       __out.push(__sanitize(this.model.get('price')));
-      __out.push('"> €</li>\n  </ul>    \n  <ul class="menu">\n    <li>\n      ');
+      __out.push('"> €</li>\n    </ul>    \n    <ul class="menu">\n      <li>\n        ');
       _ref = this.colors;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         color = _ref[_i];
-        __out.push('\n        <span class="color ');
+        __out.push('\n          <span class="color ');
         __out.push(__sanitize("c_" + this.model.get('color')));
         __out.push(' ');
         if (color === this.model.get('color')) {
@@ -4267,9 +4252,9 @@ window.iScroll = iScroll;
         }
         __out.push('" style="background:#');
         __out.push(__sanitize(color));
-        __out.push('"></span>\n      ');
+        __out.push('"></span>\n        ');
       }
-      __out.push('\n      <div class="clear"></div>\n    </li>\n  </ul>          \n</div>\n');
+      __out.push('\n        <div class="clear"></div>\n      </li>\n    </ul>          \n  </div>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4314,15 +4299,16 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
   __obj.safe = __objSafe, __obj.escape = __escape;
   return __out.join('');
-}}, "utils/zepto-ext": function(exports, require, module) {(function() {
+}}, "utils/iphone": function(exports, require, module) {(function() {
   (function($) {
-    var setWrapperHeight;
+    var scroller, setWrapperHeight;
+    scroller = null;
     $.insertSectionFromRight = function(section) {
       var current;
       current = $('body section.current');
@@ -4340,7 +4326,9 @@ window.iScroll = iScroll;
           left: '100%'
         }).anim({
           translateX: '-100%'
-        }, 0.25, 'ease-out');
+        }, 0.25, 'ease-out', function() {
+          return $.setupIScroll();
+        });
       }
     };
     $.insertSectionFromLeft = function(section, removeCurrent) {
@@ -4348,7 +4336,6 @@ window.iScroll = iScroll;
       if (removeCurrent == null) {
         removeCurrent = true;
       }
-      console.log("ok");
       current = $('body section.current');
       $.updateWrapperHeight(section, true);
       $('body').append(section);
@@ -4367,8 +4354,10 @@ window.iScroll = iScroll;
         return section.addClass("current").css({
           left: '-100%'
         }).anim({
-          translateX: '0%'
-        }, 0.25, 'ease-out');
+          translateX: '100%'
+        }, 0.25, 'ease-out', function() {
+          return $.setupIScroll();
+        });
       }
     };
     $.removeCurrentSectionToRight = function() {
@@ -4376,9 +4365,13 @@ window.iScroll = iScroll;
       current = $('body section.current');
       current.prev().addClass('current').anim({
         translateX: '0%'
-      }, 0.25, 'ease-out');
-      return current.removeClass('current').anim({
-        translateX: '100%'
+      }, 0.25, 'ease-out', function() {
+        return $.setupIScroll();
+      });
+      return current.removeClass('current').css({
+        left: '100%'
+      }).anim({
+        translateX: '0%'
       }, 0.25, 'ease-out', function() {
         return current.remove();
       });
@@ -4392,7 +4385,7 @@ window.iScroll = iScroll;
       }, 0);
       return element.find(".wrapper").height(height + "px");
     };
-    return $.updateWrapperHeight = function(element, defer) {
+    $.updateWrapperHeight = function(element, defer) {
       if (defer == null) {
         defer = false;
       }
@@ -4401,6 +4394,20 @@ window.iScroll = iScroll;
       } else {
         return setWrapperHeight(element);
       }
+    };
+    return $.setupIScroll = function() {
+      return _.defer(function() {
+        var scrollable;
+        console.log("se");
+        if (scroller) {
+          scroller.destroy();
+        }
+        scrollable = $('section.current .wrapper .scrollable')[0];
+        scroller = null;
+        if (scrollable) {
+          return scroller = new iScroll(scrollable);
+        }
+      });
     };
   })(Zepto);
 }).call(this);

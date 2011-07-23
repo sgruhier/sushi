@@ -3,7 +3,7 @@ app.routers = {}
 app.models  = {}
 app.views   = {}
 
-require('utils/zepto-ext')
+require('utils/iphone')
 ApplicationRouter = require('routers/application_router').ApplicationRouter
 Restaurant        = require('collections/restaurant').Restaurant
 RestaurantView    = require('views/restaurant_view').RestaurantView
@@ -12,10 +12,6 @@ RestaurantView    = require('views/restaurant_view').RestaurantView
 # app bootstrapping on document ready
 $(document).ready ->
   
-  setupIScroll = -> 
-    _.defer () ->
-      scroller.destroy() if scroller
-      scroller = new iScroll('plates') if $('#plates').length > 0
 
   app.initialize = ->
     app.models.restaurant = new Restaurant
@@ -27,8 +23,8 @@ $(document).ready ->
   app.initialize()
   Backbone.history.start()
   
-  setupIScroll()
-  app.models.restaurant.bind('add', setupIScroll).bind('remove', setupIScroll)
-	document.addEventListener('touchmove', (e) -> e.preventDefault())
+  $.setupIScroll()
+  app.models.restaurant.bind('add', $.setupIScroll).bind('remove', $.setupIScroll)
+  # document.addEventListener('touchmove', (e) -> e.preventDefault())
 
   

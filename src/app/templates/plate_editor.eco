@@ -4,15 +4,17 @@
 </div>
 
 <div class="wrapper">
-  <ul class="menu">
-    <li>Price <input class="price" type="text" value="<%= @model.get('price') %>"> €</li>
-  </ul>    
-  <ul class="menu">
-    <li>
-      <% for color in @colors: %>
-        <span class="color <%= "c_" + @model.get('color') %> <%= "selected" if color == @model.get('color') %>" style="background:#<%= color %>"></span>
-      <% end %>
-      <div class="clear"></div>
-    </li>
-  </ul>          
+  <div class="scrollable">
+    <ul class="menu">
+      <li>Price <input class="price" type="text" value="<%= @model.get('price') %>"> €</li>
+    </ul>    
+    <ul class="menu">
+      <li>
+        <% for color in @colors: %>
+          <span class="color <%= "c_" + @model.get('color') %> <%= "selected" if color == @model.get('color') %>" style="background:#<%= color %>"></span>
+        <% end %>
+        <div class="clear"></div>
+      </li>
+    </ul>          
+  </div>
 </div>
