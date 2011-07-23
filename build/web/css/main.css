@@ -10,10 +10,14 @@ blockquote,q{quotes:"" ""}
 a img{border:none}
 :focus{outline:0}
 body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none}
-a,avisited{color:#f95a5a;text-decoration:none}
-ahover{color:#665248}
+a{color:#f95a5a;text-decoration:none}
 .clear{clear:both}
 #plates span{float:right;color:#ddd;width:28px;height:28px;margin:-6px 30px 0 0;border-radius:30px}
+#plates .c_ffffff{border:1px solid #ddd;margin-top:-8px}
+#plates .color{width:30px;height:30px;border-radius:20px}
+.color{float:left;width:35px;height:35px;border-radius:20px;margin:5px}
+.color.selected{margin:2px;border:3px solid #000}
+ul.menu li input{-webkit-appearance:none;border:0;height:30px;padding:0 5px;font-size:14px;display:inline-block;text-align:right}
 .wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
 section .bottom{background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0,#999),color-stop(.02,#666),color-stop(1,#222))}
 .bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}

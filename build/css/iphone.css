@@ -31,9 +31,6 @@ body > section {
   min-height: 100%;
   position: absolute;
   width: 100%;
-  -webkit-transform: translate(0%,0%);
-  -webkit-transition: all 2s ease-in-out;
-  -webkit-transform-style: preserve-3d;
 }
 
 h1, h2 {

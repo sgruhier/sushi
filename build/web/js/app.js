@@ -4002,6 +4002,7 @@ window.iScroll = iScroll;
   app.routers = {};
   app.models = {};
   app.views = {};
+  require('utils/zepto-ext');
   ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
   RestaurantView = require('views/restaurant_view').RestaurantView;
@@ -4031,6 +4032,9 @@ window.iScroll = iScroll;
     setupIScroll();
     return app.models.restaurant.bind('add', setupIScroll).bind('remove', setupIScroll);
   });
+  document.addEventListener('touchmove', function(e) {
+    return e.preventDefault();
+  });
 }).call(this);
 }, "models/plate": function(exports, require, module) {(function() {
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
@@ -4048,7 +4052,7 @@ window.iScroll = iScroll;
     }
     Plate.prototype.defaults = {
       price: 10,
-      color: '#F00',
+      color: '00ff00',
       currency: '€',
       count: 0
     };
@@ -4070,10 +4074,11 @@ window.iScroll = iScroll;
     };
     return Plate;
   })();
+  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
   var PlateEditorView;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -4085,7 +4090,6 @@ window.iScroll = iScroll;
   exports.ApplicationRouter = (function() {
     __extends(ApplicationRouter, Backbone.Router);
     function ApplicationRouter() {
-      this.updateWrapperHeight = __bind(this.updateWrapperHeight, this);
       ApplicationRouter.__super__.constructor.apply(this, arguments);
     }
     ApplicationRouter.prototype.routes = {
@@ -4093,63 +4097,23 @@ window.iScroll = iScroll;
       "plate/:id/edit": "editPlate"
     };
     ApplicationRouter.prototype.initialize = function() {
-      return app.models.restaurant.bind('all', this.updateWrapperHeight);
+      return app.models.restaurant.bind('all', function() {
+        return $.updateWrapperHeight($(app.views.restaurant.el));
+      });
     };
     ApplicationRouter.prototype.home = function() {
-      var current, element;
       if ($('#home').length > 0) {
-        current = $('body section.current');
-        current.removeClass('current').anim({
-          translateX: '100%'
-        }, 0.25, 'ease-out', function() {
-          return current.remove();
-        });
-        return $('#home').addClass('current').anim({
-          translateX: '0%'
-        }, 0.25, 'ease-out');
+        return $.removeCurrentSectionToRight();
       } else {
-        element = $(app.views.restaurant.render().el);
-        $('body').html(element);
-        element.addClass('current').css({
-          '-webkit-transform': 'translateX(0)'
-        });
-        return this.updateWrapperHeight();
+        return $.insertSectionFromLeft($(app.views.restaurant.render().el));
       }
     };
     ApplicationRouter.prototype.editPlate = function(id) {
-      var current, newSection, plateEditorView;
+      var plateEditorView;
       plateEditorView = new PlateEditorView({
         model: app.models.restaurant.get(id)
       });
-      current = $('body section.current');
-      current.removeClass('current').anim({
-        translateX: '-100%'
-      }, 0.25, 'ease-out');
-      newSection = $(plateEditorView.render().el);
-      this.updateWrapperHeight(true);
-      $('body').append(newSection);
-      return newSection.addClass('current').css({
-        left: '100%'
-      }).anim({
-        translateX: '-100%'
-      }, 0.25, 'ease-out');
-    };
-    ApplicationRouter.prototype.setWrapperHeight = function() {
-      return _.map($('.wrapper'), function(element) {
-        return $(element).height(window.innerHeight - 45 * 2 + "px");
-      });
-    };
-    ApplicationRouter.prototype.updateWrapperHeight = function(forceDefer) {
-      var hasBody;
-      if (forceDefer == null) {
-        forceDefer = false;
-      }
-      hasBody = $('.wrapper').closest('body').length > 0;
-      if (!forceDefer && hasBody) {
-        return this.setWrapperHeight();
-      } else {
-        return _.defer(this.setWrapperHeight);
-      }
+      return $.insertSectionFromRight($(plateEditorView.render().el));
     };
     return ApplicationRouter;
   })();
@@ -4241,7 +4205,9 @@ window.iScroll = iScroll;
       __out.push('Plate at ');
       __out.push(__sanitize(this.model.get('price')));
       __out.push(__sanitize(this.model.get('currency')));
-      __out.push('<span class="color"></span>\n');
+      __out.push('<span class="color ');
+      __out.push(__sanitize("c_" + this.model.get('color')));
+      __out.push('"></span>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4286,7 +4252,24 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu">\n  <li>coucou</li>\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n</div>\n');
+      var color, _i, _len, _ref;
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul class="menu">\n    <li>Price <input class="price" type="text" value="');
+      __out.push(__sanitize(this.model.get('price')));
+      __out.push('"> €</li>\n  </ul>    \n  <ul class="menu">\n    <li>\n      ');
+      _ref = this.colors;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        color = _ref[_i];
+        __out.push('\n        <span class="color ');
+        __out.push(__sanitize("c_" + this.model.get('color')));
+        __out.push(' ');
+        if (color === this.model.get('color')) {
+          __out.push(__sanitize("selected"));
+        }
+        __out.push('" style="background:#');
+        __out.push(__sanitize(color));
+        __out.push('"></span>\n      ');
+      }
+      __out.push('\n      <div class="clear"></div>\n    </li>\n  </ul>          \n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4337,8 +4320,92 @@ window.iScroll = iScroll;
   }).call(__obj);
   __obj.safe = __objSafe, __obj.escape = __escape;
   return __out.join('');
-}}, "views/plate_editor_view": function(exports, require, module) {(function() {
-  var plateEditorTemplate;
+}}, "utils/zepto-ext": function(exports, require, module) {(function() {
+  (function($) {
+    var setWrapperHeight;
+    $.insertSectionFromRight = function(section) {
+      var current;
+      current = $('body section.current');
+      $.updateWrapperHeight(section, true);
+      $('body').append(section.addClass("current"));
+      if (current.length === 0) {
+        return section.css({
+          left: '0'
+        });
+      } else {
+        current.removeClass('current').anim({
+          translateX: '-100%'
+        }, 0.25, 'ease-out');
+        return section.css({
+          left: '100%'
+        }).anim({
+          translateX: '-100%'
+        }, 0.25, 'ease-out');
+      }
+    };
+    $.insertSectionFromLeft = function(section, removeCurrent) {
+      var current;
+      if (removeCurrent == null) {
+        removeCurrent = true;
+      }
+      console.log("ok");
+      current = $('body section.current');
+      $.updateWrapperHeight(section, true);
+      $('body').append(section);
+      if (current.length === 0) {
+        return section.addClass("current").css({
+          left: '0%'
+        });
+      } else {
+        current.removeClass('current').anim({
+          translateX: '100%'
+        }, 0.25, 'ease-out', function() {
+          if (removeCurrent) {
+            return current.remove();
+          }
+        });
+        return section.addClass("current").css({
+          left: '-100%'
+        }).anim({
+          translateX: '0%'
+        }, 0.25, 'ease-out');
+      }
+    };
+    $.removeCurrentSectionToRight = function() {
+      var current;
+      current = $('body section.current');
+      current.prev().addClass('current').anim({
+        translateX: '0%'
+      }, 0.25, 'ease-out');
+      return current.removeClass('current').anim({
+        translateX: '100%'
+      }, 0.25, 'ease-out', function() {
+        return current.remove();
+      });
+    };
+    setWrapperHeight = function(element) {
+      var height;
+      element = $(element);
+      height = window.innerHeight;
+      height -= _.reduce(element.find(".toolbar"), function(h, elt) {
+        return h += $(elt).height();
+      }, 0);
+      return element.find(".wrapper").height(height + "px");
+    };
+    return $.updateWrapperHeight = function(element, defer) {
+      if (defer == null) {
+        defer = false;
+      }
+      if (defer || element.closest('body').length === 0) {
+        return _.defer(setWrapperHeight, element);
+      } else {
+        return setWrapperHeight(element);
+      }
+    };
+  })(Zepto);
+}).call(this);
+}, "views/plate_editor_view": function(exports, require, module) {(function() {
+  var Plate, plateEditorTemplate;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -4348,17 +4415,37 @@ window.iScroll = iScroll;
     return child;
   };
   plateEditorTemplate = require('templates/plate_editor');
+  Plate = require('models/plate').Plate;
   exports.PlateEditorView = (function() {
     __extends(PlateEditorView, Backbone.View);
     function PlateEditorView() {
       PlateEditorView.__super__.constructor.apply(this, arguments);
     }
     PlateEditorView.prototype.tagName = 'section';
+    PlateEditorView.prototype.events = {
+      'change input.price': 'updatePrice',
+      'click span.color': 'updateColor'
+    };
     PlateEditorView.prototype.render = function() {
       $(this.el).html(plateEditorTemplate({
-        model: this.model
+        model: this.model,
+        colors: Plate.colors
       }));
       return this;
+    };
+    PlateEditorView.prototype.updatePrice = function(event) {
+      var price;
+      price = parseFloat(event.target.value);
+      return this.model.save({
+        price: price
+      });
+    };
+    PlateEditorView.prototype.updateColor = function(event) {
+      var color;
+      this.$('.color').removeClass('selected');
+      $(event.target).addClass('selected');
+      color = $(event.target).css('background');
+      return console.log(color);
     };
     return PlateEditorView;
   })();
@@ -4393,7 +4480,7 @@ window.iScroll = iScroll;
         model: this.model
       }));
       $(this.el).find('.color').css({
-        background: this.model.get('color')
+        background: '#' + this.model.get('color')
       });
       return this;
     };
@@ -4447,8 +4534,8 @@ window.iScroll = iScroll;
     };
     RestaurantView.prototype.add = function() {
       return this.model.create({
-        price: 1,
-        color: '#F00'
+        color: Plate.colors[this.model.length],
+        price: this.model.length + 1
       });
     };
     RestaurantView.prototype.remove = function() {

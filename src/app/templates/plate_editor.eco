@@ -1,12 +1,18 @@
 <div class="toolbar">
+  <a href="#" class="back" onclick="history.back(); return false;">Back</a>
   <h1>Sushi Plates</h1>
 </div>
 
 <div class="wrapper">
-  <ul id="plates" class="menu">
-  <li>coucou</li>
+  <ul class="menu">
+    <li>Price <input class="price" type="text" value="<%= @model.get('price') %>"> €</li>
+  </ul>    
+  <ul class="menu">
+    <li>
+      <% for color in @colors: %>
+        <span class="color <%= "c_" + @model.get('color') %> <%= "selected" if color == @model.get('color') %>" style="background:#<%= color %>"></span>
+      <% end %>
+      <div class="clear"></div>
+    </li>
   </ul>          
-</div>
-
-<div class="toolbar bottom">
 </div>

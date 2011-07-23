@@ -26,7 +26,7 @@ class exports.RestaurantView extends Backbone.View
     @
   
   add: ->
-    @model.create(price: 1, color: '#F00')
+    @model.create(color: Plate.colors[@model.length], price: @model.length + 1)
      
   remove: ->
     last = @model.last()

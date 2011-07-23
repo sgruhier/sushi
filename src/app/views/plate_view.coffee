@@ -12,7 +12,7 @@ class exports.PlateView extends Backbone.View
     
   render: ->
     $(@.el).html plateTemplate(model: @model)
-    $(@.el).find('.color').css(background: @model.get('color'))
+    $(@.el).find('.color').css(background: '#' + @model.get('color'))
     @
 
   edit: ->
