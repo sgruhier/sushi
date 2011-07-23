@@ -4,7 +4,7 @@ Plate              = require('models/plate').Plate
 
 class exports.RestaurantView extends Backbone.View
   tagName: 'section'
-  className: 'current'
+  id: 'home'
   
   events: 
     'click #add': 'add'

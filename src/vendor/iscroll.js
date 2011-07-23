@@ -36,6 +36,7 @@ function iScroll (el, options) {
 		overflow: 'auto',
 		snap: false,
 		bounceLock: false,
+		marginHeight: 30,
 		scrollbarColor: 'rgba(0,0,0,0.5)',
 		onScrollEnd: function () {}
 	};
@@ -125,7 +126,7 @@ iScroll.prototype = {
 		that.scrollWidth = that.wrapper.clientWidth;
 		that.scrollHeight = that.wrapper.clientHeight;
 		that.scrollerWidth = that.element.offsetWidth;
-		that.scrollerHeight = that.element.offsetHeight;
+		that.scrollerHeight = that.element.offsetHeight + that.options.marginHeight;
 		that.maxScrollX = that.scrollWidth - that.scrollerWidth;
 		that.maxScrollY = that.scrollHeight - that.scrollerHeight;
 		that.directionX = 0;

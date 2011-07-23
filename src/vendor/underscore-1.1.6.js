@@ -206,6 +206,7 @@
   // Invoke a method (with arguments) on every item in a collection.
   _.invoke = function(obj, method) {
     var args = slice.call(arguments, 2);
+    console.log(method);
     return _.map(obj, function(value) {
       return (method.call ? method || value : value[method]).apply(value, args);
     });
