@@ -12484,7 +12484,18 @@ window.jQuery = window.$ = jQuery;
   Restaurant = require('collections/restaurant').Restaurant;
   RestaurantView = require('views/restaurant_view').RestaurantView;
   $(document).ready(function() {
-    var scroller, updateScroller;
+    var setupIScroll;
+    setupIScroll = function() {
+      return _.defer(function() {
+        var scroller;
+        if (scroller) {
+          scroller.destroy();
+        }
+        if ($('#plates').length > 0) {
+          return scroller = new iScroll('plates');
+        }
+      });
+    };
     app.initialize = function() {
       app.models.restaurant = new Restaurant;
       app.views.restaurant = new RestaurantView({
@@ -12495,14 +12506,8 @@ window.jQuery = window.$ = jQuery;
     };
     app.initialize();
     Backbone.history.start();
-    scroller = new iScroll('plates');
-    updateScroller = function() {
-      return _.defer(function() {
-        scroller.destroy();
-        return scroller = new iScroll('plates');
-      });
-    };
-    return app.models.restaurant.bind('add', updateScroller).bind('remove', updateScroller);
+    setupIScroll();
+    return app.models.restaurant.bind('add', setupIScroll).bind('remove', setupIScroll);
   });
 }).call(this);
 }, "models/plate": function(exports, require, module) {(function() {
@@ -12526,7 +12531,6 @@ window.jQuery = window.$ = jQuery;
       count: 0
     };
     Plate.prototype.localStorage = new Store("sushi");
-    Plate.prototype.initialize = function() {};
     Plate.prototype.increment = function() {
       return this.set({
         count: this.get('count') + 1
@@ -12546,7 +12550,8 @@ window.jQuery = window.$ = jQuery;
   })();
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var PlateEditorView;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -12554,20 +12559,41 @@ window.jQuery = window.$ = jQuery;
     child.__super__ = parent.prototype;
     return child;
   };
+  PlateEditorView = require('views/plate_editor_view').PlateEditorView;
   exports.ApplicationRouter = (function() {
     __extends(ApplicationRouter, Backbone.Router);
     function ApplicationRouter() {
+      this.updateWrapperHeight = __bind(this.updateWrapperHeight, this);
       ApplicationRouter.__super__.constructor.apply(this, arguments);
     }
     ApplicationRouter.prototype.routes = {
       "": "home",
       "plate/:id/edit": "editPlate"
     };
+    ApplicationRouter.prototype.initialize = function() {
+      return app.models.restaurant.bind('all', this.updateWrapperHeight);
+    };
     ApplicationRouter.prototype.home = function() {
       return $('body').html(app.views.restaurant.render().el);
     };
-    ApplicationRouter.prototype.editPlate = function() {
-      return console.log($('body').html());
+    ApplicationRouter.prototype.editPlate = function(id) {
+      var plateEditorView;
+      plateEditorView = new PlateEditorView({
+        model: app.models.restaurant.get(id)
+      });
+      return $('body').append(plateEditorView.render().el);
+    };
+    ApplicationRouter.prototype.setWrapperHeight = function() {
+      return $('.wrapper').height(window.innerHeight - 45 * 2 + "px");
+    };
+    ApplicationRouter.prototype.updateWrapperHeight = function() {
+      var hasBody;
+      hasBody = $('.wrapper').closest('body').length > 0;
+      if (hasBody) {
+        return this.setWrapperHeight();
+      } else {
+        return _.defer(this.setWrapperHeight);
+      }
     };
     return ApplicationRouter;
   })();
@@ -12749,7 +12775,7 @@ window.jQuery = window.$ = jQuery;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div id="wrapper">\n  <ul id="plates" class="menu">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -12773,7 +12799,6 @@ window.jQuery = window.$ = jQuery;
     }
     PlateEditorView.prototype.tagName = 'section';
     PlateEditorView.prototype.className = 'current';
-    PlateEditorView.prototype.initialize = function() {};
     PlateEditorView.prototype.render = function() {
       $(this.el).html(plateEditorTemplate({
         model: this.model
@@ -12863,7 +12888,6 @@ window.jQuery = window.$ = jQuery;
         });
         return $plates.append(view.render().el);
       });
-      this._updateWrapperHeight();
       return this;
     };
     RestaurantView.prototype.add = function() {
@@ -12876,11 +12900,7 @@ window.jQuery = window.$ = jQuery;
       var last;
       last = this.model.last();
       this.model.remove(last);
-      console.log("de");
       return last.destroy();
-    };
-    RestaurantView.prototype._updateWrapperHeight = function() {
-      return this.$('#wrapper').height(window.innerHeight - 45 * 2 + "px");
     };
     return RestaurantView;
   })();

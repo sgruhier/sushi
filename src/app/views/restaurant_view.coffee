@@ -23,7 +23,6 @@ class exports.RestaurantView extends Backbone.View
       view = new PlateView(model: plate)
       $plates.append view.render().el
     )
-    @_updateWrapperHeight()
     @
   
   add: ->
@@ -32,8 +31,4 @@ class exports.RestaurantView extends Backbone.View
   remove: ->
     last = @model.last()
     @model.remove last
-    console.log("de");
     last.destroy()
-    
-  _updateWrapperHeight: -> 
-    @.$('#wrapper').height window.innerHeight - 45 * 2 + "px"

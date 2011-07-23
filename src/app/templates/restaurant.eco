@@ -2,7 +2,7 @@
   <h1>Sushi Plates</h1>
 </div>
 
-<div id="wrapper">
+<div class="wrapper">
   <ul id="plates" class="menu">
   </ul>          
 </div>

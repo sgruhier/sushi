@@ -6,8 +6,6 @@ class exports.Plate extends Backbone.Model
     count: 0
   localStorage: new Store("sushi")
 
-  initialize: -> 
-
   increment: ->
     @set(count: @get('count') + 1) 
 
