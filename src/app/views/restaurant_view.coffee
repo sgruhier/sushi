@@ -9,6 +9,7 @@ class exports.RestaurantView extends Backbone.View
   events: 
     'click #add': 'add'
     'click #remove': 'remove'
+    'click #bill': 'bill'
   
   initialize: -> 
     _.bindAll(@, 'render')
@@ -32,3 +33,7 @@ class exports.RestaurantView extends Backbone.View
     last = @model.last()
     @model.remove last
     last.destroy()
+  
+  bill: ->
+    Backbone.history.navigate("bill", true)
+    

@@ -4062,7 +4062,7 @@ window.iScroll = iScroll;
   exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
-  var PlateEditorView;
+  var BillView, PlateEditorView;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -4072,6 +4072,7 @@ window.iScroll = iScroll;
     return child;
   };
   PlateEditorView = require('views/plate_editor_view').PlateEditorView;
+  BillView = require('views/bill_view').BillView;
   exports.ApplicationRouter = (function() {
     __extends(ApplicationRouter, Backbone.Router);
     function ApplicationRouter() {
@@ -4079,7 +4080,8 @@ window.iScroll = iScroll;
     }
     ApplicationRouter.prototype.routes = {
       "": "home",
-      "plate/:id/edit": "editPlate"
+      "plate/:id/edit": "editPlate",
+      "bill": "bill"
     };
     ApplicationRouter.prototype.initialize = function() {
       return app.models.restaurant.bind('all', function() {
@@ -4100,10 +4102,17 @@ window.iScroll = iScroll;
       });
       return $.insertSectionFromRight($(plateEditorView.render().el));
     };
+    ApplicationRouter.prototype.bill = function() {
+      var billView;
+      billView = new BillView({
+        model: app.models.restaurant
+      });
+      return $.insertSectionFromRight($(billView.render().el));
+    };
     return ApplicationRouter;
   })();
 }).call(this);
-}, "templates/billl": function(exports, require, module) {module.exports = function(__obj) {
+}, "templates/bill": function(exports, require, module) {module.exports = function(__obj) {
   if (!__obj) __obj = {};
   var __out = [], __capture = function(callback) {
     var out = __out, result;
@@ -4142,7 +4151,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi</h1>\n</div>\n\n<div id="wrapper">\n  <ul id="plates" class="menu">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total: <em>0</em> €</span>\n  <a href="#" id="reset">Reset</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div id="wrapper">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total: <em>0</em> €</span>\n  <a href="#" id="reset">Reset</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4299,7 +4308,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n  <a href="#bill" id="bill">Edit bill</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4319,6 +4328,8 @@ window.iScroll = iScroll;
           left: '0'
         });
       } else {
+        console.log(current[0]);
+        console.log(section[0]);
         current.removeClass('current').anim({
           translateX: '-100%'
         }, 0.25, 'ease-out');
@@ -4398,7 +4409,6 @@ window.iScroll = iScroll;
     $.setupIScroll = function() {
       return _.defer(function() {
         var scrollable;
-        console.log("se");
         if (scroller) {
           scroller.destroy();
         }
@@ -4428,6 +4438,33 @@ window.iScroll = iScroll;
       }
     };
   })(Zepto);
+}).call(this);
+}, "views/bill_view": function(exports, require, module) {(function() {
+  var Plate, billTemplate;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  billTemplate = require('templates/bill');
+  Plate = require('models/plate').Plate;
+  exports.BillView = (function() {
+    __extends(BillView, Backbone.View);
+    function BillView() {
+      BillView.__super__.constructor.apply(this, arguments);
+    }
+    BillView.prototype.tagName = 'section';
+    BillView.prototype.render = function() {
+      $(this.el).html(billTemplate({
+        model: this.model
+      }));
+      return this;
+    };
+    return BillView;
+  })();
 }).call(this);
 }, "views/plate_editor_view": function(exports, require, module) {(function() {
   var Plate, plateEditorTemplate;
@@ -4537,7 +4574,8 @@ window.iScroll = iScroll;
     RestaurantView.prototype.id = 'home';
     RestaurantView.prototype.events = {
       'click #add': 'add',
-      'click #remove': 'remove'
+      'click #remove': 'remove',
+      'click #bill': 'bill'
     };
     RestaurantView.prototype.initialize = function() {
       _.bindAll(this, 'render');
@@ -4568,6 +4606,9 @@ window.iScroll = iScroll;
       last = this.model.last();
       this.model.remove(last);
       return last.destroy();
+    };
+    RestaurantView.prototype.bill = function() {
+      return Backbone.history.navigate("bill", true);
     };
     return RestaurantView;
   })();

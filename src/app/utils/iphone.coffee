@@ -13,21 +13,23 @@
     if current.length == 0
       section.css(left: '0')
     else
+      console.log(current[0]);
+      console.log(section[0]);
       current.removeClass('current').anim(translateX: '-100%', 0.25, 'ease-out')
       section.css(left: '100%').anim(translateX: '-100%', 0.25, 'ease-out', () -> $.setupIScroll() )
  
-   $.insertSectionFromLeft= (section, removeCurrent = true) ->
-     # Slide out current section if exsists
-     current = $('body section.current')
- 
-     # Slide in new section
-     $.updateWrapperHeight(section, true)
-     $('body').append section
-     if current.length == 0
-       section.addClass("current").css(left: '0%')
-     else
-       current.removeClass('current').anim(translateX: '100%', 0.25, 'ease-out', () -> current.remove() if removeCurrent)
-       section.addClass("current").css(left: '-100%').anim(translateX: '100%', 0.25, 'ease-out', () -> $.setupIScroll())
+  $.insertSectionFromLeft= (section, removeCurrent = true) ->
+    # Slide out current section if exsists
+    current = $('body section.current')
+  
+    # Slide in new section
+    $.updateWrapperHeight(section, true)
+    $('body').append section
+    if current.length == 0
+      section.addClass("current").css(left: '0%')
+    else
+      current.removeClass('current').anim(translateX: '100%', 0.25, 'ease-out', () -> current.remove() if removeCurrent)
+      section.addClass("current").css(left: '-100%').anim(translateX: '100%', 0.25, 'ease-out', () -> $.setupIScroll())
 
   $.removeCurrentSectionToRight= () ->
     current = $('body section.current')
@@ -53,7 +55,6 @@
   
   $.setupIScroll= -> 
     _.defer () ->
-      console.log("se");
       scroller.destroy() if scroller
       scrollable = $('section.current .wrapper .scrollable')[0]
       scroller = null

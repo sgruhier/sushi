@@ -1,9 +1,10 @@
 <div class="toolbar">
-  <h1>Sushi</h1>
+  <a href="#" class="back" onclick="history.back(); return false;">Back</a>
+  <h1>Sushi Plates</h1>
 </div>
 
 <div id="wrapper">
-  <ul id="plates" class="menu">
+  <ul class="menu scrollable">
   </ul>          
 </div>
 
