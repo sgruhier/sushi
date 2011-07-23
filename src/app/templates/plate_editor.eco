@@ -6,7 +6,10 @@
 <div class="wrapper">
   <div class="scrollable">
     <ul class="menu">
-      <li>Price <input class="price" type="text" value="<%= @model.get('price') %>"> €</li>
+      <li>
+        <label>Price</label> <input class="price" type="text" value="<%= @model.get('price') %>">
+        <div class="clear"></div>
+      </li>
     </ul>    
     <ul class="menu">
       <li>

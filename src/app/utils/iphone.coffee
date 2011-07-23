@@ -59,4 +59,16 @@
       scroller = null
       scroller = new iScroll(scrollable) if scrollable
 
+  # Convert rgb(12,5,200) to <prefix>0c05c8
+  $.hexColorFromString = (color, prefix = '') ->
+    if (color.slice(0,4) == 'rgb(') 
+      cols = color.slice(4, color.length - 1).split(',')
+      _.inject cols, (str, color) -> 
+        color = parseInt(color, 10).toString(16) 
+        color = "0#{color}" if color.length == 1
+        str += color
+      , prefix
+    else
+      color
+  
 )(Zepto)

@@ -11,8 +11,6 @@ RestaurantView    = require('views/restaurant_view').RestaurantView
 
 # app bootstrapping on document ready
 $(document).ready ->
-  
-
   app.initialize = ->
     app.models.restaurant = new Restaurant
     app.views.restaurant  = new RestaurantView(model: app.models.restaurant)

@@ -4059,7 +4059,7 @@ window.iScroll = iScroll;
     };
     return Plate;
   })();
-  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000", "ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
+  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
   var PlateEditorView;
@@ -4238,9 +4238,9 @@ window.iScroll = iScroll;
   (function() {
     (function() {
       var color, _i, _len, _ref;
-      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <div class="scrollable">\n    <ul class="menu">\n      <li>Price <input class="price" type="text" value="');
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <div class="scrollable">\n    <ul class="menu">\n      <li>\n        <label>Price</label> <input class="price" type="text" value="');
       __out.push(__sanitize(this.model.get('price')));
-      __out.push('"> €</li>\n    </ul>    \n    <ul class="menu">\n      <li>\n        ');
+      __out.push('">\n        <div class="clear"></div>\n      </li>\n    </ul>    \n    <ul class="menu">\n      <li>\n        ');
       _ref = this.colors;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         color = _ref[_i];
@@ -4395,7 +4395,7 @@ window.iScroll = iScroll;
         return setWrapperHeight(element);
       }
     };
-    return $.setupIScroll = function() {
+    $.setupIScroll = function() {
       return _.defer(function() {
         var scrollable;
         console.log("se");
@@ -4408,6 +4408,24 @@ window.iScroll = iScroll;
           return scroller = new iScroll(scrollable);
         }
       });
+    };
+    return $.hexColorFromString = function(color, prefix) {
+      var cols;
+      if (prefix == null) {
+        prefix = '';
+      }
+      if (color.slice(0, 4) === 'rgb(') {
+        cols = color.slice(4, color.length - 1).split(',');
+        return _.inject(cols, function(str, color) {
+          color = parseInt(color, 10).toString(16);
+          if (color.length === 1) {
+            color = "0" + color;
+          }
+          return str += color;
+        }, prefix);
+      } else {
+        return color;
+      }
     };
   })(Zepto);
 }).call(this);
@@ -4448,11 +4466,11 @@ window.iScroll = iScroll;
       });
     };
     PlateEditorView.prototype.updateColor = function(event) {
-      var color;
       this.$('.color').removeClass('selected');
       $(event.target).addClass('selected');
-      color = $(event.target).css('background');
-      return console.log(color);
+      return this.model.save({
+        color: $.hexColorFromString($(event.target).css('background'))
+      });
     };
     return PlateEditorView;
   })();

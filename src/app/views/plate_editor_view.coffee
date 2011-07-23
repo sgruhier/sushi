@@ -19,5 +19,5 @@ class exports.PlateEditorView extends Backbone.View
   updateColor: (event) ->
     @.$('.color').removeClass('selected')
     $(event.target).addClass('selected')
-    color = $(event.target).css('background')
-    console.log(color);
+    
+    @model.save(color: $.hexColorFromString($(event.target).css('background')))

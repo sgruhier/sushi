@@ -17,7 +17,8 @@ a{color:#f95a5a;text-decoration:none}
 #plates .color{width:30px;height:30px;border-radius:20px}
 .color{float:left;width:35px;height:35px;border-radius:20px;margin:5px}
 .color.selected{margin:2px;border:3px solid #000}
-ul.menu li input{-webkit-appearance:none;border:0;height:30px;padding:0 5px;font-size:14px;display:inline-block;text-align:right}
+ul.menu li label{font-size:22px;float:left}
+ul.menu li input{-webkit-appearance:none;border:0;font-size:22px;float:left;width:200px;margin-left:10px}
 .wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
 section .bottom{background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0,#999),color-stop(.02,#666),color-stop(1,#222))}
 .bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}
