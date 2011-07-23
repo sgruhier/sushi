@@ -17,6 +17,6 @@ class exports.PlateView extends Backbone.View
     @
 
   edit: ->
-     
+    app.controllers.main.navigate("plate/" + @model.id + "/edit", true);
     
   

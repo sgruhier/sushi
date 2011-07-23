@@ -12489,11 +12489,14 @@ window.jQuery = window.$ = jQuery;
       MainController.__super__.constructor.apply(this, arguments);
     }
     MainController.prototype.routes = {
-      "": "home"
+      "": "home",
+      "plate/:id/edit": "editPlate"
     };
-    MainController.prototype.initialize = function() {};
     MainController.prototype.home = function() {
       return $('body').html(app.views.restaurant.render().el);
+    };
+    MainController.prototype.editPlate = function() {
+      return console.log($('body').html());
     };
     return MainController;
   })();
@@ -12771,10 +12774,9 @@ window.jQuery = window.$ = jQuery;
     function PlateEditorView() {
       PlateEditorView.__super__.constructor.apply(this, arguments);
     }
-    PlateEditorView.prototype.initialize = function() {
-      _.bindAll(this, 'render');
-      return this.model.bind('change', this.render);
-    };
+    PlateEditorView.prototype.tagName = 'section';
+    PlateEditorView.prototype.className = 'current';
+    PlateEditorView.prototype.initialize = function() {};
     PlateEditorView.prototype.render = function() {
       $(this.el).html(plateEditorTemplate({
         model: this.model
@@ -12820,7 +12822,9 @@ window.jQuery = window.$ = jQuery;
       });
       return this;
     };
-    PlateView.prototype.edit = function() {};
+    PlateView.prototype.edit = function() {
+      return app.controllers.main.navigate("plate/" + this.model.id + "/edit", true);
+    };
     return PlateView;
   })();
 }).call(this);
