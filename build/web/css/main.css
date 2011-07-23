@@ -13,8 +13,7 @@ body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo
 a,avisited{color:#f95a5a;text-decoration:none}
 ahover{color:#665248}
 .clear{clear:both}
-#plates span{float:right;color:#ddd;width:50px;height:20px;margin-right:30px}
-#plates a{font-size:12px;float:right;overflow:hidden;margin:0;border-width:0 5px;padding:0 3px;width:auto;height:30px;line-height:30px;-webkit-border-image:url("../../images/greenButton.png") 0 5 0 5;color:#eee;margin:-7px 10px 0 10px}
+#plates span{float:right;color:#ddd;width:28px;height:28px;margin:-6px 30px 0 0;border-radius:30px}
 #wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
 section .bottom{background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0,#999),color-stop(.02,#666),color-stop(1,#222))}
 .bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}

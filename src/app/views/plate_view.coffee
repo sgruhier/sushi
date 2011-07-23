@@ -12,11 +12,10 @@ class exports.PlateView extends Backbone.View
     
   render: ->
     $(@.el).html plateTemplate(model: @model)
-    color = @model.get('color')
-    $(@.el).find('.color').css(background: color)
+    $(@.el).find('.color').css(background: @model.get('color'))
     @
 
   edit: ->
-    app.controllers.main.navigate("plate/" + @model.id + "/edit", true);
+    Backbone.history.navigate("plate/" + @model.id + "/edit", true)
     
   

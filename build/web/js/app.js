@@ -12474,40 +12474,13 @@ window.jQuery = window.$ = jQuery;
     return Restaurant;
   })();
 }).call(this);
-}, "controllers/main_controller": function(exports, require, module) {(function() {
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-    function ctor() { this.constructor = child; }
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor;
-    child.__super__ = parent.prototype;
-    return child;
-  };
-  exports.MainController = (function() {
-    __extends(MainController, Backbone.Router);
-    function MainController() {
-      MainController.__super__.constructor.apply(this, arguments);
-    }
-    MainController.prototype.routes = {
-      "": "home",
-      "plate/:id/edit": "editPlate"
-    };
-    MainController.prototype.home = function() {
-      return $('body').html(app.views.restaurant.render().el);
-    };
-    MainController.prototype.editPlate = function() {
-      return console.log($('body').html());
-    };
-    return MainController;
-  })();
-}).call(this);
 }, "main": function(exports, require, module) {(function() {
-  var MainController, Restaurant, RestaurantView;
+  var ApplicationRouter, Restaurant, RestaurantView;
   window.app = {};
-  app.controllers = {};
+  app.routers = {};
   app.models = {};
   app.views = {};
-  MainController = require('controllers/main_controller').MainController;
+  ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
   RestaurantView = require('views/restaurant_view').RestaurantView;
   $(document).ready(function() {
@@ -12517,15 +12490,12 @@ window.jQuery = window.$ = jQuery;
       app.views.restaurant = new RestaurantView({
         model: app.models.restaurant
       });
-      app.controllers.main = new MainController;
+      app.routers.main = new ApplicationRouter;
       return app.models.restaurant.fetch();
     };
     app.initialize();
     Backbone.history.start();
     scroller = new iScroll('plates');
-    document.addEventListener('touchmove', function(e) {
-      return e.preventDefault();
-    });
     updateScroller = function() {
       return _.defer(function() {
         scroller.destroy();
@@ -12573,6 +12543,33 @@ window.jQuery = window.$ = jQuery;
       });
     };
     return Plate;
+  })();
+}).call(this);
+}, "routers/application_router": function(exports, require, module) {(function() {
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  exports.ApplicationRouter = (function() {
+    __extends(ApplicationRouter, Backbone.Router);
+    function ApplicationRouter() {
+      ApplicationRouter.__super__.constructor.apply(this, arguments);
+    }
+    ApplicationRouter.prototype.routes = {
+      "": "home",
+      "plate/:id/edit": "editPlate"
+    };
+    ApplicationRouter.prototype.home = function() {
+      return $('body').html(app.views.restaurant.render().el);
+    };
+    ApplicationRouter.prototype.editPlate = function() {
+      return console.log($('body').html());
+    };
+    return ApplicationRouter;
   })();
 }).call(this);
 }, "templates/billl": function(exports, require, module) {module.exports = function(__obj) {
@@ -12812,18 +12809,16 @@ window.jQuery = window.$ = jQuery;
       return this.model.bind('change', this.render);
     };
     PlateView.prototype.render = function() {
-      var color;
       $(this.el).html(plateTemplate({
         model: this.model
       }));
-      color = this.model.get('color');
       $(this.el).find('.color').css({
-        background: color
+        background: this.model.get('color')
       });
       return this;
     };
     PlateView.prototype.edit = function() {
-      return app.controllers.main.navigate("plate/" + this.model.id + "/edit", true);
+      return Backbone.history.navigate("plate/" + this.model.id + "/edit", true);
     };
     return PlateView;
   })();

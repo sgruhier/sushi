@@ -1,4 +1,4 @@
-class exports.MainController extends Backbone.Router
+class exports.ApplicationRouter extends Backbone.Router
   routes :
     "": "home"
     "plate/:id/edit" : "editPlate"    
