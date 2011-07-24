@@ -3,7 +3,7 @@ class exports.Plate extends Backbone.Model
                  "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"]
   defaults:
     price: 10
-    color: '00ff00'
+    color: 'ff0000'
     currency: '€'
     count: 0
     

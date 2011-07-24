@@ -4,6 +4,8 @@ BillPlateView = require('views/bill_plate_view').BillPlateView
 
 class exports.BillView extends Backbone.View
   tagName: 'section'
+  events: 
+    'click #reset': 'reset'
   
   initialize: ->
     @collection.bind('change', @updateBill)    
@@ -24,3 +26,7 @@ class exports.BillView extends Backbone.View
   updateBill: => 
     @.$('#count em').html @collection.nbPlates()
     @.$('#total em').html @collection.price()
+
+  reset: -> 
+    if confirm("Are you sure to reset, total will be set to 0")
+      @collection.invoke('set', count:0)

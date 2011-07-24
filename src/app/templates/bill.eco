@@ -11,5 +11,5 @@
 <div class="toolbar bottom">
   <span id="count">Plates: <em>0</em></span>
   <span id="total">Total:  <em>0</em> €</span>
-  <a href="#" id="reset">Reset</a>
+  <a href="#bill" id="reset">Reset</a>
 </div>

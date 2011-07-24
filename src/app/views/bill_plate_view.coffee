@@ -20,5 +20,7 @@ class exports.BillPlateView extends Backbone.View
 
   decrement: ->
     @model.decrement()
+  
+    
     
   

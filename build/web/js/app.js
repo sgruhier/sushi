@@ -4006,16 +4006,22 @@ window.iScroll = iScroll;
   })();
 }).call(this);
 }, "main": function(exports, require, module) {(function() {
-  var ApplicationRouter, Restaurant;
+  var ApplicationRouter, Plate, Restaurant;
   window.app = {};
   require('utils/iphone');
   ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
+  Plate = require('models/plate').Plate;
   $(document).ready(function() {
     app.initialize = function() {
       app.restaurant = new Restaurant;
       app.router = new ApplicationRouter;
-      return app.restaurant.fetch();
+      app.restaurant.fetch();
+      if (app.restaurant.length === 0) {
+        return app.restaurant.add(new Plate({
+          price: 1
+        }));
+      }
     };
     app.initialize();
     return Backbone.history.start();
@@ -4038,7 +4044,7 @@ window.iScroll = iScroll;
     Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
     Plate.prototype.defaults = {
       price: 10,
-      color: '00ff00',
+      color: 'ff0000',
       currency: '€',
       count: 0
     };
@@ -4151,7 +4157,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="bill_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total:  <em>0</em> €</span>\n  <a href="#" id="reset">Reset</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="bill_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total:  <em>0</em> €</span>\n  <a href="#bill" id="reset">Reset</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4518,6 +4524,9 @@ window.iScroll = iScroll;
       BillView.__super__.constructor.apply(this, arguments);
     }
     BillView.prototype.tagName = 'section';
+    BillView.prototype.events = {
+      'click #reset': 'reset'
+    };
     BillView.prototype.initialize = function() {
       return this.collection.bind('change', this.updateBill);
     };
@@ -4541,6 +4550,13 @@ window.iScroll = iScroll;
     BillView.prototype.updateBill = function() {
       this.$('#count em').html(this.collection.nbPlates());
       return this.$('#total em').html(this.collection.price());
+    };
+    BillView.prototype.reset = function() {
+      if (confirm("Are you sure to reset, total will be set to 0")) {
+        return this.collection.invoke('set', {
+          count: 0
+        });
+      }
     };
     return BillView;
   })();
