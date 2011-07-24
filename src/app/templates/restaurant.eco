@@ -8,7 +8,7 @@
 </div>
 
 <div class="toolbar bottom">
-  <a href="#" id="add">Add</a>
-  <a href="#" id="remove">Remove last</a>
-  <a href="#bill" id="bill">Edit bill</a>
+  <a class="button" href="#" id="add">Add</a>
+  <a class="button" href="#" id="remove">Remove last</a>
+  <a class="button" href="#bill" id="bill">Edit bill</a>
 </div>

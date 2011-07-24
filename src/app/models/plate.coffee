@@ -1,6 +1,7 @@
 class exports.Plate extends Backbone.Model
-  this.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", 
-                 "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"]
+  this.colors = ["ffffff", "ffe3d2", "d5c5d8", "cccccc", "ffb7ec", "ffc683", "ccff00", "ffff00", "99ffff", "ffba00", "33cc00", "fd6e74",
+                 "ff0a5b", "ff0000", "9133cc", "0d9ba0", "C3a100", "8e9500", "9f0000", "5e1d68", "333333", "0a0c52", "330000", "000000"]
+
   defaults:
     price: 10
     color: 'ff0000'

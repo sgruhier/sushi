@@ -14,7 +14,7 @@
     <ul class="menu">
       <li>
         <% for color in @colors: %>
-          <span class="color <%= "c_" + @model.get('color') %> <%= "selected" if color == @model.get('color') %>" style="background:#<%= color %>"></span>
+          <span class="color <%= "c_" + color %> <%= "selected" if color == @model.get('color') %>" style="background:#<%= color %>"></span>
         <% end %>
         <div class="clear"></div>
       </li>

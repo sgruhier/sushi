@@ -16,16 +16,15 @@ a{color:#f95a5a;text-decoration:none}
 #bill_list ul li{text-align:center;padding:4px 0 1px 0;position:relative}
 #bill_list ul span.color{float:none;display:inline-block;color:#ddd;width:30px;height:30px;margin:0 0 0 0;border-radius:30px}
 #bill_list ul span.text{display:inline-block;vertical-align:10px;color:#333}
-#bill_list ul .increment,#bill_list ul .decrement{position:absolute;top:3px;width:30px;height:30px;border-radius:30px;border:1px solid #333;font-size:20px;font-weight:100;line-height:30px}
+#bill_list ul .increment,#bill_list ul .decrement{position:absolute;top:3px;width:30px;height:30px;border-radius:30px;border:1px solid #333;font-size:20px;font-weight:100;line-height:28px}
 #bill_list ul .increment{right:10px}
 #bill_list ul .decrement{left:10px}
-.c_ffffff{border:1px solid #ddd;margin-top:-8px}
+.color.c_ffffff{border:1px solid #ddd;width:33px;height:33px}
+.color.c_ffffff.selected{width:35px;height:35px}
 .color{float:left;width:35px;height:35px;border-radius:20px;margin:5px}
 .color.selected{margin:2px;border:3px solid #000}
 ul.menu li label{font-size:22px;float:left}
 ul.menu li input{-webkit-appearance:none;border:0;font-size:22px;float:left;width:200px;margin-left:10px}
 .wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
-section .bottom{background-image:-webkit-gradient(linear,0 0,0 100%,color-stop(0,#999),color-stop(.02,#666),color-stop(1,#222))}
 .bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}
-.bottom a{font-size:12px;float:left;overflow:hidden;margin:0;border-width:0 5px;padding:0 3px;width:auto;height:30px;line-height:30px;-webkit-border-image:url("../../images/button.png") 0 5 0 5;color:inherit;margin-left:10px}
-.bottom a#reset{position:absolute;top:8px;right:6px}
+#add,#remove{position:static;float:left;margin:-2px 10px 0 0}
