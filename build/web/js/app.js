@@ -4825,7 +4825,7 @@ window.iScroll = iScroll;
       }, 0.15, 'linear', function() {
         return about.remove();
       });
-      return section.anim({
+      section.anim({
         rotateY: '90deg',
         scale: 0.8
       }, 0.15, 'linear', function() {
@@ -4834,6 +4834,7 @@ window.iScroll = iScroll;
           scale: 1
         }, 0.15, 'linear');
       });
+      return $.setupIScroll(section);
     };
     return AboutView;
   })();

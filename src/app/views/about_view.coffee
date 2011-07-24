@@ -34,4 +34,5 @@ class exports.AboutView
     section.anim({rotateY: '90deg', scale: 0.8}, 0.15, 'linear', () ->
       section.anim({rotateY: '0deg', scale: 1}, 0.15, 'linear')
     )
+    $.setupIScroll section
     
