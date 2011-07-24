@@ -12,9 +12,14 @@ a img{border:none}
 body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none}
 a{color:#f95a5a;text-decoration:none}
 .clear{clear:both}
-#plates span{float:right;color:#ddd;width:28px;height:28px;margin:-6px 30px 0 0;border-radius:30px}
-#plates .c_ffffff{border:1px solid #ddd;margin-top:-8px}
-#plates .color{width:30px;height:30px;border-radius:20px}
+#plate_list ul span.color{float:right;color:#ddd;width:30px;height:30px;margin:-7px 30px 0 0;border-radius:30px}
+#bill_list ul li{text-align:center;padding:4px 0 1px 0;position:relative}
+#bill_list ul span.color{float:none;display:inline-block;color:#ddd;width:30px;height:30px;margin:0 0 0 0;border-radius:30px}
+#bill_list ul span.text{display:inline-block;vertical-align:10px;color:#333}
+#bill_list ul .increment,#bill_list ul .decrement{position:absolute;top:3px;width:30px;height:30px;border-radius:30px;border:1px solid #333;font-size:20px;font-weight:100;line-height:30px}
+#bill_list ul .increment{right:10px}
+#bill_list ul .decrement{left:10px}
+.c_ffffff{border:1px solid #ddd;margin-top:-8px}
 .color{float:left;width:35px;height:35px;border-radius:20px;margin:5px}
 .color.selected{margin:2px;border:3px solid #000}
 ul.menu li label{font-size:22px;float:left}

@@ -3,13 +3,13 @@
   <h1>Sushi Plates</h1>
 </div>
 
-<div id="wrapper">
+<div class="wrapper" id="bill_list">
   <ul class="menu scrollable">
   </ul>          
 </div>
 
 <div class="toolbar bottom">
   <span id="count">Plates: <em>0</em></span>
-  <span id="total">Total: <em>0</em> €</span>
+  <span id="total">Total:  <em>0</em> €</span>
   <a href="#" id="reset">Reset</a>
 </div>

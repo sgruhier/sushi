@@ -1,0 +1,5 @@
+<span class="decrement">-</span>
+<span class="color <%= "c_" + @model.get('color') %>"></span>
+<span class="text"><%= @model.get('count') %> Plate(s) at <%= @model.get('price') %><%= @model.get('currency') %></span>
+<span class="color <%= "c_" + @model.get('color') %>"></span>
+<span class="increment">+</span>

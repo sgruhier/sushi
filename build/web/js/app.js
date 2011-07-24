@@ -3992,6 +3992,16 @@ window.iScroll = iScroll;
     }
     Restaurant.prototype.model = Plate;
     Restaurant.prototype.localStorage = new Store("sushi");
+    Restaurant.prototype.price = function() {
+      return _.reduce(this.models, function(price, plate) {
+        return price += plate.get('count') * plate.get('price');
+      }, 0);
+    };
+    Restaurant.prototype.nbPlates = function() {
+      return _.reduce(this.models, function(nbPlates, plate) {
+        return nbPlates += plate.get('count');
+      }, 0);
+    };
     return Restaurant;
   })();
 }).call(this);
@@ -4034,17 +4044,19 @@ window.iScroll = iScroll;
     };
     Plate.prototype.localStorage = new Store("sushi");
     Plate.prototype.increment = function() {
-      return this.set({
+      return this.save({
         count: this.get('count') + 1
       });
     };
     Plate.prototype.decrement = function() {
-      return this.set({
-        count: this.get('count') - 1
-      });
+      if (this.get('count') > 0) {
+        return this.save({
+          count: this.get('count') - 1
+        });
+      }
     };
     Plate.prototype.reset = function() {
-      return this.set({
+      return this.save({
         count: 0
       });
     };
@@ -4139,7 +4151,61 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div id="wrapper">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total: <em>0</em> €</span>\n  <a href="#" id="reset">Reset</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <a href="#" class="back" onclick="history.back(); return false;">Back</a>\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="bill_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <span id="count">Plates: <em>0</em></span>\n  <span id="total">Total:  <em>0</em> €</span>\n  <a href="#" id="reset">Reset</a>\n</div>\n');
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/bill_plate": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      __out.push('<span class="decrement">-</span>\n<span class="color ');
+      __out.push(__sanitize("c_" + this.model.get('color')));
+      __out.push('"></span>\n<span class="text">');
+      __out.push(__sanitize(this.model.get('count')));
+      __out.push(' Plate(s) at ');
+      __out.push(__sanitize(this.model.get('price')));
+      __out.push(__sanitize(this.model.get('currency')));
+      __out.push('</span>\n<span class="color ');
+      __out.push(__sanitize("c_" + this.model.get('color')));
+      __out.push('"></span>\n<span class="increment">+</span>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4296,7 +4362,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper">\n  <ul id="plates" class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n  <a href="#bill" id="bill">Edit bill</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="plate_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a href="#" id="add">Add</a>\n  <a href="#" id="remove">Remove last</a>\n  <a href="#bill" id="bill">Edit bill</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4389,9 +4455,52 @@ window.iScroll = iScroll;
     };
   })(Zepto);
 }).call(this);
-}, "views/bill_view": function(exports, require, module) {(function() {
-  var Plate, billTemplate;
+}, "views/bill_plate_view": function(exports, require, module) {(function() {
+  var billPlateTemplate;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+    for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
+    function ctor() { this.constructor = child; }
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor;
+    child.__super__ = parent.prototype;
+    return child;
+  };
+  billPlateTemplate = require('templates/bill_plate');
+  exports.BillPlateView = (function() {
+    __extends(BillPlateView, Backbone.View);
+    function BillPlateView() {
+      BillPlateView.__super__.constructor.apply(this, arguments);
+    }
+    BillPlateView.prototype.tagName = 'li';
+    BillPlateView.prototype.events = {
+      'click .increment': 'increment',
+      'click .decrement': 'decrement'
+    };
+    BillPlateView.prototype.initialize = function() {
+      _.bindAll(this, 'render');
+      return this.model.bind('change', this.render);
+    };
+    BillPlateView.prototype.render = function() {
+      $(this.el).html(billPlateTemplate({
+        model: this.model
+      }));
+      $(this.el).find('.color').css({
+        background: '#' + this.model.get('color')
+      });
+      return this;
+    };
+    BillPlateView.prototype.increment = function() {
+      return this.model.increment();
+    };
+    BillPlateView.prototype.decrement = function() {
+      return this.model.decrement();
+    };
+    return BillPlateView;
+  })();
+}).call(this);
+}, "views/bill_view": function(exports, require, module) {(function() {
+  var BillPlateView, Plate, billTemplate;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -4401,17 +4510,37 @@ window.iScroll = iScroll;
   };
   billTemplate = require('templates/bill');
   Plate = require('models/plate').Plate;
+  BillPlateView = require('views/bill_plate_view').BillPlateView;
   exports.BillView = (function() {
     __extends(BillView, Backbone.View);
     function BillView() {
+      this.updateBill = __bind(this.updateBill, this);
       BillView.__super__.constructor.apply(this, arguments);
     }
     BillView.prototype.tagName = 'section';
+    BillView.prototype.initialize = function() {
+      return this.collection.bind('change', this.updateBill);
+    };
     BillView.prototype.render = function() {
+      var $plates;
       $(this.el).html(billTemplate({
         collection: this.collection
       }));
+      $plates = this.$("ul");
+      this.collection.each(function(plate) {
+        var view;
+        view = new BillPlateView({
+          model: plate
+        });
+        return $plates.append(view.render().el);
+      });
+      this.updateBill();
+      $.setupIScroll($(this.el));
       return this;
+    };
+    BillView.prototype.updateBill = function() {
+      this.$('#count em').html(this.collection.nbPlates());
+      return this.$('#total em').html(this.collection.price());
     };
     return BillView;
   })();
@@ -4535,7 +4664,7 @@ window.iScroll = iScroll;
     RestaurantView.prototype.render = function() {
       var $plates;
       $(this.el).html(restaurantTemplate());
-      $plates = this.$("#plates");
+      $plates = this.$("ul");
       this.collection.each(function(plate) {
         var view;
         view = new PlateView({

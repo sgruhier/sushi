@@ -18,7 +18,7 @@ class exports.RestaurantView extends Backbone.View
     
   render: ->
     $(@.el).html restaurantTemplate()
-    $plates = @.$("#plates")
+    $plates = @.$("ul")
 
     @collection.each( (plate) ->
       view = new PlateView(model: plate)

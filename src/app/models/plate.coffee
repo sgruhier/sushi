@@ -10,12 +10,12 @@ class exports.Plate extends Backbone.Model
   localStorage: new Store("sushi")
 
   increment: ->
-    @set(count: @get('count') + 1) 
+    @save(count: @get('count') + 1) 
 
   decrement: ->
-    @set(count: @get('count') - 1) 
-
+    @save(count: @get('count') - 1) if @get('count') > 0
+    
   reset: ->
-    @set(count: 0) 
+    @save(count: 0) 
   
     

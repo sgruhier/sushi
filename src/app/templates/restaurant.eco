@@ -2,8 +2,8 @@
   <h1>Sushi Plates</h1>
 </div>
 
-<div class="wrapper">
-  <ul id="plates" class="menu scrollable">
+<div class="wrapper" id="plate_list">
+  <ul class="menu scrollable">
   </ul>          
 </div>
 

@@ -43,7 +43,7 @@
     else
       color
 
-  ## PRIVATE METHODS 11
+  ## PRIVATE METHODS ##
   
   # callback when slide out is done: remove slided section, update new section position
   slideOutCallback= () ->
