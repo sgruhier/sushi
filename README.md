@@ -10,6 +10,10 @@ We had a lot of fun but the bill was pretty high :). So I said, we should have a
 I wanted to make it as clean as I can. This was also an opportunity to use in the same project Backbone, Zepto and BrunchWithCoffee.
 That's it, now you can manage your sushi bill easily.
 
+## Technical details
+
+Later on a blog post 
+
 ## Components
 
 This is demo application of a mobile web application made with
