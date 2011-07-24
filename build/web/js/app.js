@@ -660,7 +660,7 @@ var Zepto = (function() {
 
 (function($, undefined){
   var supportedTransforms = [
-    'scale scaleX scaleY',
+    'scale', 'scaleX', 'scaleY',
     'translate', 'translateX', 'translateY', 'translate3d',
     'skew',      'skewX',      'skewY',
     'rotate',    'rotateX',    'rotateY',    'rotateZ',    'rotate3d',
@@ -670,12 +670,11 @@ var Zepto = (function() {
   $.fn.anim = function(properties, duration, ease, callback){
     var transforms = [], cssProperties = {}, key, that = this, wrappedCallback;
 
-    for (key in properties)
-      if (supportedTransforms.indexOf(key)>0)
+    for (key in properties) 
+      if (supportedTransforms.indexOf(key)>=0) 
         transforms.push(key + '(' + properties[key] + ')');
       else
         cssProperties[key] = properties[key];
-
     wrappedCallback = function(){
       that.css({'-webkit-transition':'none'});
       callback && callback();
@@ -4269,22 +4268,24 @@ window.iScroll = iScroll;
   })();
 }).call(this);
 }, "main": function(exports, require, module) {(function() {
-  var ApplicationRouter, Plate, Restaurant;
+  var AboutView, ApplicationRouter, Plate, Restaurant;
   window.app = {};
   require('utils/iphone');
   ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
   Plate = require('models/plate').Plate;
+  AboutView = require('views/about_view').AboutView;
   $(document).ready(function() {
     app.initialize = function() {
       app.restaurant = new Restaurant;
       app.router = new ApplicationRouter;
       app.restaurant.fetch();
       if (app.restaurant.length === 0) {
-        return app.restaurant.add(new Plate({
+        app.restaurant.add(new Plate({
           price: 1
         }));
       }
+      return new AboutView;
     };
     app.initialize();
     return Backbone.history.start();
@@ -4381,7 +4382,52 @@ window.iScroll = iScroll;
     return ApplicationRouter;
   })();
 }).call(this);
-}, "templates/bill": function(exports, require, module) {module.exports = function(__obj) {
+}, "templates/about": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      __out.push('<section id="about_panel">\n  <h1>About Sushi Bill</h1>\n  \n  <div class="toolbar bottom">\n    <button class="button" id="close_about">Back To Sushi Bill</button>\n  </div>\n</section>\n');
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "templates/bill": function(exports, require, module) {module.exports = function(__obj) {
   if (!__obj) __obj = {};
   var __out = [], __capture = function(callback) {
     var out = __out, result;
@@ -4631,7 +4677,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="plate_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a class="button" href="#" id="add">Add</a>\n  <a class="button" href="#" id="remove">Remove last</a>\n  <a class="button" href="#bill" id="bill">Edit bill</a>\n</div>\n');
+      __out.push('<div class="toolbar">\n  <h1>Sushi Plates</h1>\n</div>\n\n<div class="wrapper" id="plate_list">\n  <ul class="menu scrollable">\n  </ul>          \n</div>\n\n<div class="toolbar bottom">\n  <a class="button" href="#" id="add">Add</a>\n  <a class="button" href="#" id="remove">Remove last</a>\n  <button class="button" id="about">About</button>\n  <a class="button" href="#bill" id="bill">Edit bill</a>\n</div>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4642,6 +4688,11 @@ window.iScroll = iScroll;
     var scroller, setWrapperHeight, slideOutCallback, windowHeight;
     scroller = null;
     windowHeight = window.innerHeight;
+    $(document).ready(function() {
+      return $('body').css({
+        "-webkit-perspective-origin": "50% " + window.innerHeight / 2 + "px"
+      });
+    });
     $.insertSection = function(section, options) {
       var current;
       if (options == null) {
@@ -4725,6 +4776,66 @@ window.iScroll = iScroll;
       return element.find(".wrapper").height(height + "px");
     };
   })(Zepto);
+}).call(this);
+}, "views/about_view": function(exports, require, module) {(function() {
+  var aboutTemplate;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  aboutTemplate = require('templates/about');
+  exports.AboutView = (function() {
+    function AboutView() {
+      this.hide = __bind(this.hide, this);
+      this.show = __bind(this.show, this);      $('#about').live('click', this.show);
+      $('#close_about').live('click', this.hide);
+    }
+    AboutView.prototype.show = function() {
+      var about, section;
+      section = $('body > section');
+      $('body').append(aboutTemplate());
+      about = $("#about_panel");
+      about.height(section.height() + "px").width(section.width() + "px");
+      $('body > section').addClass('flip');
+      about.anim({
+        rotateY: '-90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return about.anim({
+          rotateY: '0deg',
+          scale: 1
+        }, 0.15, 'linear');
+      });
+      return section.anim({
+        rotateY: '90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return section.anim({
+          rotateY: '180deg',
+          scale: 1
+        }, 0.15, 'linear');
+      });
+    };
+    AboutView.prototype.hide = function() {
+      var about, section;
+      section = $('body > section').first();
+      $('body > section').removeClass('flip');
+      about = $("#about_panel");
+      about.anim({
+        rotateY: '-90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return about.remove();
+      });
+      return section.anim({
+        rotateY: '90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return section.anim({
+          rotateY: '0deg',
+          scale: 1
+        }, 0.15, 'linear');
+      });
+    };
+    return AboutView;
+  })();
 }).call(this);
 }, "views/bill_plate_view": function(exports, require, module) {(function() {
   var billPlateTemplate;
@@ -4913,7 +5024,7 @@ window.iScroll = iScroll;
   })();
 }).call(this);
 }, "views/restaurant_view": function(exports, require, module) {(function() {
-  var Plate, PlateView, restaurantTemplate;
+  var Plate, PlateView, aboutTemplate, restaurantTemplate;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -4923,6 +5034,7 @@ window.iScroll = iScroll;
     return child;
   };
   restaurantTemplate = require('templates/restaurant');
+  aboutTemplate = require('templates/about');
   PlateView = require('views/plate_view').PlateView;
   Plate = require('models/plate').Plate;
   exports.RestaurantView = (function() {
@@ -4970,6 +5082,35 @@ window.iScroll = iScroll;
     };
     RestaurantView.prototype.bill = function() {
       return Backbone.history.navigate("bill", true);
+    };
+    RestaurantView.prototype.about = function() {
+      var about, section;
+      section = $('body > section');
+      $('body').append(aboutTemplate());
+      about = $("#about_panel");
+      about.height(section.height() + "px").width(section.width() + "px");
+      $('body > section').addClass('flip');
+      about.anim({
+        rotateY: '-90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return about.anim({
+          rotateY: '0deg',
+          scale: 1
+        }, 0.15, 'linear');
+      });
+      return section.anim({
+        rotateY: '90deg',
+        scale: 0.8
+      }, 0.15, 'linear', function() {
+        return section.anim({
+          rotateY: '180deg',
+          scale: 1
+        }, 0.15, 'linear');
+      });
+    };
+    RestaurantView.prototype.aboutBack = function() {
+      return console.log('ok');
     };
     return RestaurantView;
   })();

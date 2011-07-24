@@ -10,5 +10,6 @@
 <div class="toolbar bottom">
   <a class="button" href="#" id="add">Add</a>
   <a class="button" href="#" id="remove">Remove last</a>
+  <button class="button" id="about">About</button>
   <a class="button" href="#bill" id="bill">Edit bill</a>
 </div>

@@ -648,7 +648,7 @@ var Zepto = (function() {
 
 (function($, undefined){
   var supportedTransforms = [
-    'scale scaleX scaleY',
+    'scale', 'scaleX', 'scaleY',
     'translate', 'translateX', 'translateY', 'translate3d',
     'skew',      'skewX',      'skewY',
     'rotate',    'rotateX',    'rotateY',    'rotateZ',    'rotate3d',
@@ -658,12 +658,11 @@ var Zepto = (function() {
   $.fn.anim = function(properties, duration, ease, callback){
     var transforms = [], cssProperties = {}, key, that = this, wrappedCallback;
 
-    for (key in properties)
-      if (supportedTransforms.indexOf(key)>0)
+    for (key in properties) 
+      if (supportedTransforms.indexOf(key)>=0) 
         transforms.push(key + '(' + properties[key] + ')');
       else
         cssProperties[key] = properties[key];
-
     wrappedCallback = function(){
       that.css({'-webkit-transition':'none'});
       callback && callback();

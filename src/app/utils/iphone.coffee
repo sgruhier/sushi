@@ -3,6 +3,9 @@
 (($) ->
   scroller     = null
   windowHeight =  window.innerHeight
+
+  # Set perspective origin to window center
+  $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + window.innerHeight/2 + "px")
   
   $.insertSection= (section, options = direction: 1) ->
     current = $('body section')

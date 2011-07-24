@@ -1,0 +1,7 @@
+<section id="about_panel">
+  <h1>About Sushi Bill</h1>
+  
+  <div class="toolbar bottom">
+    <button class="button" id="close_about">Back To Sushi Bill</button>
+  </div>
+</section>

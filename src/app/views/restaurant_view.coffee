@@ -1,4 +1,5 @@
 restaurantTemplate = require('templates/restaurant')
+aboutTemplate      = require('templates/about')
 PlateView          = require('views/plate_view').PlateView
 Plate              = require('models/plate').Plate
 
@@ -37,4 +38,21 @@ class exports.RestaurantView extends Backbone.View
   
   bill: ->
     Backbone.history.navigate("bill", true)
+    
+  about: ->
+    section = $('body > section')
+    $('body').append aboutTemplate()
+    about = $("#about_panel")
+    about.height(section.height() + "px").width(section.width() + "px")
+
+    $('body > section').addClass('flip')
+    about.anim({rotateY: '-90deg', scale: 0.8}, 0.15, 'linear', () ->
+      about.anim({rotateY: '0deg', scale: 1}, 0.15, 'linear')
+    )
+    section.anim({rotateY: '90deg', scale: 0.8}, 0.15, 'linear', () ->
+      section.anim({rotateY: '180deg', scale: 1}, 0.15, 'linear')
+    )
+  
+  aboutBack: -> 
+    console.log('ok');
     

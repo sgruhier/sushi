@@ -12,6 +12,7 @@ a img{border:none}
 body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none}
 a{color:#f95a5a;text-decoration:none}
 .clear{clear:both}
+section{top:0;-webkit-transform-style:preserve-3d;-webkit-backface-visibility:hidden;z-index:900}
 #plate_list ul span.color{float:right;color:#ddd;width:30px;height:30px;margin:-7px 30px 0 0;border-radius:30px}
 #bill_list ul li{text-align:center;padding:4px 0 1px 0;position:relative}
 #bill_list ul span.color{float:none;display:inline-block;color:#ddd;width:30px;height:30px;margin:0 0 0 0;border-radius:30px}
@@ -28,3 +29,9 @@ ul.menu li input{-webkit-appearance:none;border:0;font-size:22px;float:left;widt
 .wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
 .bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;background:none;text-shadow:1px 1px 1px #000}
 #add,#remove{position:static;float:left;margin:-2px 10px 0 0}
+#bill,#about{position:static;float:right;margin:-2px 10px 0 0}
+#back_to_home{position:absolute;top:auto;bottom:5px;right:5px}
+#about_panel{left:0;top:0;-webkit-transform:rotateY(-180deg);z-index:800}
+#about_panel .toolbar{position:absolute;bottom:0;left:0;width:100%}
+#about_panel.flip{z-index:1000}
+section.flip{z-index:900}
