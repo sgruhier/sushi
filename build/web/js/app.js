@@ -4650,19 +4650,19 @@ window.iScroll = iScroll;
         };
       }
       current = $('body section');
-      $('body').append(section);
+      $('body').append(section.hide());
       $.setupIScroll(section);
       if (current.length === 0) {
         return section.css({
           left: '0'
-        });
+        }).show();
       } else {
         current.anim({
           translateX: "" + (-options.direction) + "00%"
         }, 0.25, 'ease-out', slideOutCallback);
         return section.css({
           left: "" + options.direction + "00%"
-        }).anim({
+        }).show().anim({
           translateX: "" + (-options.direction) + "00%"
         }, 0.25, 'ease-out');
       }

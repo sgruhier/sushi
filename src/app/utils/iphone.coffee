@@ -7,16 +7,16 @@
   $.insertSection= (section, options = direction: 1) ->
     current = $('body section')
     
-    $('body').append section
+    $('body').append section.hide()
     $.setupIScroll(section)
     if current.length == 0
       # First section in dom, no anim
-      section.css(left: '0')
+      section.css(left: '0').show()
     else
       # Slide out current section 
       current.anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out', slideOutCallback)
       # Slide in new section
-      section.css(left: "#{options.direction}00%").anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
+      section.css(left: "#{options.direction}00%").show().anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
  
   # Setup iScroll for a section if need be
   $.setupIScroll= (section = null) ->
