@@ -22,16 +22,16 @@
       section.css(left: "#{options.direction}00%").anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
  
   # Setup iScroll for a section if need be
-  $.setupIScroll= (section = null) ->
+  $.setupIScroll= (element = null) ->
     if scroller
       scroller.destroy() 
       scroller = null
 
-    section ?= $('body > section')
-    scrollable = section.find('.wrapper > .scrollable')[0]
+    element ?= $('body > section')
+    scrollable = element.find('.wrapper > .scrollable')[0]
 
     if scrollable
-      setWrapperHeight(section)
+      setWrapperHeight(element)
       scroller = new iScroll(scrollable) 
 
   # Convert rgb(12,5,200) to <prefix>0c05c8

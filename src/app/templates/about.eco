@@ -1,6 +1,32 @@
 <section id="about_panel">
-  <h1>About Sushi Bill</h1>
+  <div class="wrapper">
+    <div class="scrollable">
+      <div>
+        <h1>About Sushi Bill</h1>
   
+        <p>
+          This application helps you to manage your bill in sushi restaurant where plates are placed on a rotating conveyor belt.
+        </p>
+        <p>
+          it was also a great opportunity for me to make a web app that behaves exactly like a native iPhone application using modern tools like Backbone.js, 
+          zepto.js or CoffeeScript.
+        </p>
+        <p>
+          The application uses a local storage for persistence and is just one static HTML with JS flavor. No backend at all !!<br/>
+          Source code is on <a target="_blank" href="http://github.com/sgruhier/sushi">github</a>
+        </p>
+        <p>
+          Contact me on for any UI/UX/Javascript/Rails development :) <a target="_blank" href="mailto:sebastien.gruhier@xilinus.com">sebastien.gruhier@xilinus.com</a>
+        </p>
+        <p>
+          And please follow me on twitter: <a target="_blank" href="http://twitter.com/sgruhier">sgruhier</a>
+        </p>
+        <p>
+        @ 2011 - Sébastien Gruhier - xilinus
+        </p>
+      </div>
+    </div>
+  </div>
   <div class="toolbar bottom">
     <button class="button" id="close_about">Back To Sushi Bill</button>
   </div>

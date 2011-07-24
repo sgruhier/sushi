@@ -4421,7 +4421,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<section id="about_panel">\n  <h1>About Sushi Bill</h1>\n  \n  <div class="toolbar bottom">\n    <button class="button" id="close_about">Back To Sushi Bill</button>\n  </div>\n</section>\n');
+      __out.push('<section id="about_panel">\n  <div class="wrapper">\n    <div class="scrollable">\n      <div>\n        <h1>About Sushi Bill</h1>\n  \n        <p>\n          This application helps you to manage your bill in sushi restaurant where plates are placed on a rotating conveyor belt.\n        </p>\n        <p>\n          it was also a great opportunity for me to make a web app that behaves exactly like a native iPhone application using modern tools like Backbone.js, \n          zepto.js or CoffeeScript.\n        </p>\n        <p>\n          The application uses a local storage for persistence and is just one static HTML with JS flavor. No backend at all !!<br/>\n          Source code is on <a target="_blank" href="http://github.com/sgruhier/sushi">github</a>\n        </p>\n        <p>\n          Contact me on for any UI/UX/Javascript/Rails development :) <a target="_blank" href="mailto:sebastien.gruhier@xilinus.com">sebastien.gruhier@xilinus.com</a>\n        </p>\n        <p>\n          And please follow me on twitter: <a target="_blank" href="http://twitter.com/sgruhier">sgruhier</a>\n        </p>\n        <p>\n        @ 2011 - Sébastien Gruhier - xilinus\n        </p>\n      </div>\n    </div>\n  </div>\n  <div class="toolbar bottom">\n    <button class="button" id="close_about">Back To Sushi Bill</button>\n  </div>\n</section>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4720,23 +4720,23 @@ window.iScroll = iScroll;
         }, 0.25, 'ease-out');
       }
     };
-    $.setupIScroll = function(section) {
+    $.setupIScroll = function(element) {
       var scrollable;
-      if (section == null) {
-        section = null;
+      if (element == null) {
+        element = null;
       }
       if (scroller) {
         scroller.destroy();
         scroller = null;
       }
-            if (section != null) {
-        section;
+            if (element != null) {
+        element;
       } else {
-        section = $('body > section');
+        element = $('body > section');
       };
-      scrollable = section.find('.wrapper > .scrollable')[0];
+      scrollable = element.find('.wrapper > .scrollable')[0];
       if (scrollable) {
-        setWrapperHeight(section);
+        setWrapperHeight(element);
         return scroller = new iScroll(scrollable);
       }
     };
@@ -4792,6 +4792,7 @@ window.iScroll = iScroll;
       section = $('body > section');
       $('body').append(aboutTemplate());
       about = $("#about_panel");
+      $.setupIScroll(about);
       about.height(section.height() + "px").width(section.width() + "px");
       $('body > section').addClass('flip');
       about.anim({

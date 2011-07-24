@@ -12,6 +12,7 @@ class exports.AboutView
     
     $('body').append aboutTemplate()
     about = $("#about_panel")
+    $.setupIScroll about
     about.height(section.height() + "px").width(section.width() + "px")
 
     $('body > section').addClass('flip')

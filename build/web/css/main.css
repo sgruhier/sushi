@@ -9,7 +9,7 @@ blockquote:before,blockquote:after,q:before,q:after{content:""}
 blockquote,q{quotes:"" ""}
 a img{border:none}
 :focus{outline:0}
-body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none}
+body{font:bold 18px "Helvetica Neue",Arial,Helvetica,sans-serif;font-family:"Ovo",serif;overflow:none;-webkit-font-smoothing:antialiased}
 a{color:#f95a5a;text-decoration:none}
 .clear{clear:both}
 section{top:0;-webkit-transform-style:preserve-3d;-webkit-backface-visibility:hidden;z-index:900}
@@ -34,4 +34,5 @@ ul.menu li input{-webkit-appearance:none;border:0;font-size:22px;float:left;widt
 #about_panel{left:0;top:0;-webkit-transform:rotateY(-180deg);z-index:800}
 #about_panel .toolbar{position:absolute;bottom:0;left:0;width:100%}
 #about_panel.flip{z-index:1000}
+#about_panel p{margin:10px 20px 6px;font:normal normal normal 16px/normal Helvetica;margin:10px 20px 6px;text-shadow:rgba(255,255,255,0.19)}
 section.flip{z-index:900}
