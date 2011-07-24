@@ -5,5 +5,5 @@ class exports.BillView extends Backbone.View
   tagName: 'section'
     
   render: ->
-    $(@.el).html billTemplate(model: @model)
+    $(@.el).html billTemplate(collection: @collection)
     @

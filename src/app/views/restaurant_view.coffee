@@ -13,25 +13,26 @@ class exports.RestaurantView extends Backbone.View
   
   initialize: -> 
     _.bindAll(@, 'render')
-    @model.bind('all', @render)
+    @collection.bind('add', @render).bind('remove', @render)
     @
     
   render: ->
     $(@.el).html restaurantTemplate()
     $plates = @.$("#plates")
 
-    @model.each( (plate) ->
+    @collection.each( (plate) ->
       view = new PlateView(model: plate)
       $plates.append view.render().el
     )
+    $.setupIScroll $(@.el)
     @
   
   add: ->
-    @model.create(color: Plate.colors[@model.length], price: @model.length + 1)
+    @collection.create(color: Plate.colors[@collection.length], price: @collection.length + 1)
      
   remove: ->
-    last = @model.last()
-    @model.remove last
+    last = @collection.last()
+    @collection.remove last
     last.destroy()
   
   bill: ->

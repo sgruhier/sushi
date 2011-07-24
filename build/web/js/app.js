@@ -1359,7 +1359,6 @@ var Zepto = (function() {
   // Invoke a method (with arguments) on every item in a collection.
   _.invoke = function(obj, method) {
     var args = slice.call(arguments, 2);
-    console.log(method);
     return _.map(obj, function(value) {
       return (method.call ? method || value : value[method]).apply(value, args);
     });
@@ -3997,28 +3996,19 @@ window.iScroll = iScroll;
   })();
 }).call(this);
 }, "main": function(exports, require, module) {(function() {
-  var ApplicationRouter, Restaurant, RestaurantView;
+  var ApplicationRouter, Restaurant;
   window.app = {};
-  app.routers = {};
-  app.models = {};
-  app.views = {};
   require('utils/iphone');
   ApplicationRouter = require('routers/application_router').ApplicationRouter;
   Restaurant = require('collections/restaurant').Restaurant;
-  RestaurantView = require('views/restaurant_view').RestaurantView;
   $(document).ready(function() {
     app.initialize = function() {
-      app.models.restaurant = new Restaurant;
-      app.views.restaurant = new RestaurantView({
-        model: app.models.restaurant
-      });
-      app.routers.main = new ApplicationRouter;
-      return app.models.restaurant.fetch();
+      app.restaurant = new Restaurant;
+      app.router = new ApplicationRouter;
+      return app.restaurant.fetch();
     };
     app.initialize();
-    Backbone.history.start();
-    $.setupIScroll();
-    return app.models.restaurant.bind('add', $.setupIScroll).bind('remove', $.setupIScroll);
+    return Backbone.history.start();
   });
 }).call(this);
 }, "models/plate": function(exports, require, module) {(function() {
@@ -4035,6 +4025,7 @@ window.iScroll = iScroll;
     function Plate() {
       Plate.__super__.constructor.apply(this, arguments);
     }
+    Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
     Plate.prototype.defaults = {
       price: 10,
       color: '00ff00',
@@ -4059,10 +4050,9 @@ window.iScroll = iScroll;
     };
     return Plate;
   })();
-  exports.Plate.colors = ["ff0000", "ffff00", "330000", "ffffff", "000000", "ffb7ec", "33cc00", "ffc683", "ff0a5b", "0a0c52", "9133cc", "99ffff", "ccff00", "cccccc", "333333", "ffba00", "ffe3d2", "d5c5d8", "c3a100", "5e1d68", "0d9ba0", "fd6e74", "8e9500", "9f0000"];
 }).call(this);
 }, "routers/application_router": function(exports, require, module) {(function() {
-  var BillView, PlateEditorView;
+  var BillView, PlateEditorView, RestaurantView;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -4073,6 +4063,7 @@ window.iScroll = iScroll;
   };
   PlateEditorView = require('views/plate_editor_view').PlateEditorView;
   BillView = require('views/bill_view').BillView;
+  RestaurantView = require('views/restaurant_view').RestaurantView;
   exports.ApplicationRouter = (function() {
     __extends(ApplicationRouter, Backbone.Router);
     function ApplicationRouter() {
@@ -4083,31 +4074,28 @@ window.iScroll = iScroll;
       "plate/:id/edit": "editPlate",
       "bill": "bill"
     };
-    ApplicationRouter.prototype.initialize = function() {
-      return app.models.restaurant.bind('all', function() {
-        return $.updateWrapperHeight($(app.views.restaurant.el));
-      });
-    };
     ApplicationRouter.prototype.home = function() {
-      if ($('#home').length > 0) {
-        return $.removeCurrentSectionToRight();
-      } else {
-        return $.insertSectionFromLeft($(app.views.restaurant.render().el));
-      }
+      var restaurantView;
+      restaurantView = new RestaurantView({
+        collection: app.restaurant
+      });
+      return $.insertSection($(restaurantView.render().el), {
+        direction: -1
+      });
     };
     ApplicationRouter.prototype.editPlate = function(id) {
       var plateEditorView;
       plateEditorView = new PlateEditorView({
-        model: app.models.restaurant.get(id)
+        model: app.restaurant.get(id)
       });
-      return $.insertSectionFromRight($(plateEditorView.render().el));
+      return $.insertSection($(plateEditorView.render().el));
     };
     ApplicationRouter.prototype.bill = function() {
       var billView;
       billView = new BillView({
-        model: app.models.restaurant
+        collection: app.restaurant
       });
-      return $.insertSectionFromRight($(billView.render().el));
+      return $.insertSection($(billView.render().el));
     };
     return ApplicationRouter;
   })();
@@ -4316,110 +4304,55 @@ window.iScroll = iScroll;
   return __out.join('');
 }}, "utils/iphone": function(exports, require, module) {(function() {
   (function($) {
-    var scroller, setWrapperHeight;
+    var scroller, setWrapperHeight, slideOutCallback, windowHeight;
     scroller = null;
-    $.insertSectionFromRight = function(section) {
+    windowHeight = window.innerHeight;
+    $.insertSection = function(section, options) {
       var current;
-      current = $('body section.current');
-      $.updateWrapperHeight(section, true);
-      $('body').append(section.addClass("current"));
+      if (options == null) {
+        options = {
+          direction: 1
+        };
+      }
+      current = $('body section');
+      $('body').append(section);
+      $.setupIScroll(section);
       if (current.length === 0) {
         return section.css({
           left: '0'
         });
       } else {
-        console.log(current[0]);
-        console.log(section[0]);
-        current.removeClass('current').anim({
-          translateX: '-100%'
-        }, 0.25, 'ease-out');
+        current.anim({
+          translateX: "" + (-options.direction) + "00%"
+        }, 0.25, 'ease-out', slideOutCallback);
         return section.css({
-          left: '100%'
+          left: "" + options.direction + "00%"
         }).anim({
-          translateX: '-100%'
-        }, 0.25, 'ease-out', function() {
-          return $.setupIScroll();
-        });
+          translateX: "" + (-options.direction) + "00%"
+        }, 0.25, 'ease-out');
       }
     };
-    $.insertSectionFromLeft = function(section, removeCurrent) {
-      var current;
-      if (removeCurrent == null) {
-        removeCurrent = true;
+    $.setupIScroll = function(section) {
+      var scrollable;
+      if (section == null) {
+        section = null;
       }
-      current = $('body section.current');
-      $.updateWrapperHeight(section, true);
-      $('body').append(section);
-      if (current.length === 0) {
-        return section.addClass("current").css({
-          left: '0%'
-        });
-      } else {
-        current.removeClass('current').anim({
-          translateX: '100%'
-        }, 0.25, 'ease-out', function() {
-          if (removeCurrent) {
-            return current.remove();
-          }
-        });
-        return section.addClass("current").css({
-          left: '-100%'
-        }).anim({
-          translateX: '100%'
-        }, 0.25, 'ease-out', function() {
-          return $.setupIScroll();
-        });
-      }
-    };
-    $.removeCurrentSectionToRight = function() {
-      var current;
-      current = $('body section.current');
-      current.prev().addClass('current').anim({
-        translateX: '0%'
-      }, 0.25, 'ease-out', function() {
-        return $.setupIScroll();
-      });
-      return current.removeClass('current').css({
-        left: '100%'
-      }).anim({
-        translateX: '0%'
-      }, 0.25, 'ease-out', function() {
-        return current.remove();
-      });
-    };
-    setWrapperHeight = function(element) {
-      var height;
-      element = $(element);
-      height = window.innerHeight;
-      height -= _.reduce(element.find(".toolbar"), function(h, elt) {
-        return h += $(elt).height();
-      }, 0);
-      return element.find(".wrapper").height(height + "px");
-    };
-    $.updateWrapperHeight = function(element, defer) {
-      if (defer == null) {
-        defer = false;
-      }
-      if (defer || element.closest('body').length === 0) {
-        return _.defer(setWrapperHeight, element);
-      } else {
-        return setWrapperHeight(element);
-      }
-    };
-    $.setupIScroll = function() {
-      return _.defer(function() {
-        var scrollable;
-        if (scroller) {
-          scroller.destroy();
-        }
-        scrollable = $('section.current .wrapper .scrollable')[0];
+      if (scroller) {
+        scroller.destroy();
         scroller = null;
-        if (scrollable) {
-          return scroller = new iScroll(scrollable);
-        }
-      });
+      }
+            if (section != null) {
+        section;
+      } else {
+        section = $('body > section');
+      };
+      scrollable = section.find('.wrapper > .scrollable')[0];
+      if (scrollable) {
+        setWrapperHeight(section);
+        return scroller = new iScroll(scrollable);
+      }
     };
-    return $.hexColorFromString = function(color, prefix) {
+    $.hexColorFromString = function(color, prefix) {
       var cols;
       if (prefix == null) {
         prefix = '';
@@ -4436,6 +4369,23 @@ window.iScroll = iScroll;
       } else {
         return color;
       }
+    };
+    slideOutCallback = function() {
+      var sections;
+      sections = $('body section');
+      sections.first().remove();
+      return sections.last().css({
+        left: '0%',
+        '-webkit-transform': 'none'
+      });
+    };
+    return setWrapperHeight = function(element) {
+      var height;
+      height = windowHeight;
+      height -= _.reduce(element.find(".toolbar"), function(h, elt) {
+        return h += $(elt).height();
+      }, 0);
+      return element.find(".wrapper").height(height + "px");
     };
   })(Zepto);
 }).call(this);
@@ -4459,7 +4409,7 @@ window.iScroll = iScroll;
     BillView.prototype.tagName = 'section';
     BillView.prototype.render = function() {
       $(this.el).html(billTemplate({
-        model: this.model
+        collection: this.collection
       }));
       return this;
     };
@@ -4579,32 +4529,33 @@ window.iScroll = iScroll;
     };
     RestaurantView.prototype.initialize = function() {
       _.bindAll(this, 'render');
-      this.model.bind('all', this.render);
+      this.collection.bind('add', this.render).bind('remove', this.render);
       return this;
     };
     RestaurantView.prototype.render = function() {
       var $plates;
       $(this.el).html(restaurantTemplate());
       $plates = this.$("#plates");
-      this.model.each(function(plate) {
+      this.collection.each(function(plate) {
         var view;
         view = new PlateView({
           model: plate
         });
         return $plates.append(view.render().el);
       });
+      $.setupIScroll($(this.el));
       return this;
     };
     RestaurantView.prototype.add = function() {
-      return this.model.create({
-        color: Plate.colors[this.model.length],
-        price: this.model.length + 1
+      return this.collection.create({
+        color: Plate.colors[this.collection.length],
+        price: this.collection.length + 1
       });
     };
     RestaurantView.prototype.remove = function() {
       var last;
-      last = this.model.last();
-      this.model.remove(last);
+      last = this.collection.last();
+      this.collection.remove(last);
       return last.destroy();
     };
     RestaurantView.prototype.bill = function() {
