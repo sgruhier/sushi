@@ -4795,23 +4795,34 @@ window.iScroll = iScroll;
       $.setupIScroll(about);
       about.height(section.height() + "px").width(section.width() + "px");
       $('body > section').addClass('flip');
+      about.css({
+        opacity: 0
+      });
       about.anim({
         rotateY: '-90deg',
         scale: 0.8
-      }, 0.15, 'linear', function() {
+      }, 0.4, 'linear', function() {
+        about.css({
+          opacity: 0.5
+        });
         return about.anim({
           rotateY: '0deg',
-          scale: 1
-        }, 0.15, 'linear');
+          scale: 1,
+          opacity: 1
+        }, 0.4, 'linear');
       });
       return section.anim({
         rotateY: '90deg',
-        scale: 0.8
-      }, 0.15, 'linear', function() {
+        scale: 0.8,
+        opacity: 0.5
+      }, 0.4, 'linear', function() {
+        section.css({
+          opacity: 0
+        });
         return section.anim({
           rotateY: '180deg',
           scale: 1
-        }, 0.15, 'linear');
+        }, 0.4, 'linear');
       });
     };
     AboutView.prototype.hide = function() {
@@ -4821,18 +4832,26 @@ window.iScroll = iScroll;
       about = $("#about_panel");
       about.anim({
         rotateY: '-90deg',
-        scale: 0.8
-      }, 0.15, 'linear', function() {
+        scale: 0.8,
+        opacity: 0.5
+      }, 0.4, 'linear', function() {
+        about.css({
+          opacity: 0
+        });
         return about.remove();
       });
       section.anim({
         rotateY: '90deg',
         scale: 0.8
-      }, 0.15, 'linear', function() {
+      }, 0.4, 'linear', function() {
+        section.css({
+          opacity: 0.5
+        });
         return section.anim({
           rotateY: '0deg',
-          scale: 1
-        }, 0.15, 'linear');
+          scale: 1,
+          opacity: 1
+        }, 0.4, 'linear');
       });
       return $.setupIScroll(section);
     };
@@ -5084,35 +5103,6 @@ window.iScroll = iScroll;
     };
     RestaurantView.prototype.bill = function() {
       return Backbone.history.navigate("bill", true);
-    };
-    RestaurantView.prototype.about = function() {
-      var about, section;
-      section = $('body > section');
-      $('body').append(aboutTemplate());
-      about = $("#about_panel");
-      about.height(section.height() + "px").width(section.width() + "px");
-      $('body > section').addClass('flip');
-      about.anim({
-        rotateY: '-90deg',
-        scale: 0.8
-      }, 0.15, 'linear', function() {
-        return about.anim({
-          rotateY: '0deg',
-          scale: 1
-        }, 0.15, 'linear');
-      });
-      return section.anim({
-        rotateY: '90deg',
-        scale: 0.8
-      }, 0.15, 'linear', function() {
-        return section.anim({
-          rotateY: '180deg',
-          scale: 1
-        }, 0.15, 'linear');
-      });
-    };
-    RestaurantView.prototype.aboutBack = function() {
-      return console.log('ok');
     };
     return RestaurantView;
   })();
