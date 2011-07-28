@@ -5,6 +5,7 @@ body
   font-family 'Ovo', serif
   overflow none
   -webkit-font-smoothing antialiased
+  background #000
 
 a
   color #F95A5A
@@ -13,7 +14,7 @@ a
 .clear 
   clear both
 
-section
+div
   top 0
   -webkit-transform-style  preserve-3d
   -webkit-backface-visibility  hidden
@@ -104,7 +105,7 @@ ul.menu li input
   width 100%
   overflow hidden
     
-.bottom
+div.bottom
   font-family inherit
   font-weight bold
   color #fff
@@ -112,8 +113,8 @@ ul.menu li input
   text-overflow ellipsis
   text-decoration none
   white-space nowrap
-  background none
   text-shadow 1px 1px 1px #000
+  top auto
 
 #add, #remove
   position static
@@ -153,5 +154,5 @@ ul.menu li input
   margin  10px 20px 6px
   text-shadow  rgba(255, 255, 255, 0.19)
   
-section.flip
+div.flip
   z-index  900

@@ -4361,7 +4361,7 @@ window.iScroll = iScroll;
       restaurantView = new RestaurantView({
         collection: app.restaurant
       });
-      return $.insertSection($(restaurantView.render().el), {
+      return $.insertContent($(restaurantView.render().el), {
         direction: -1
       });
     };
@@ -4370,14 +4370,18 @@ window.iScroll = iScroll;
       plateEditorView = new PlateEditorView({
         model: app.restaurant.get(id)
       });
-      return $.insertSection($(plateEditorView.render().el));
+      return $.insertContent($(plateEditorView.render().el), {
+        direction: 1
+      });
     };
     ApplicationRouter.prototype.bill = function() {
       var billView;
       billView = new BillView({
         collection: app.restaurant
       });
-      return $.insertSection($(billView.render().el));
+      return $.insertContent($(billView.render().el), {
+        direction: -1
+      });
     };
     return ApplicationRouter;
   })();
@@ -4421,7 +4425,7 @@ window.iScroll = iScroll;
   }
   (function() {
     (function() {
-      __out.push('<section id="about_panel">\n  <div class="wrapper">\n    <div class="scrollable">\n      <div>\n        <h1>About Sushi Bill</h1>\n  \n        <p>\n          This application helps you to manage your bill in sushi restaurant where plates are placed on a rotating conveyor belt.\n        </p>\n        <p>\n          it was also a great opportunity for me to make a web app that behaves exactly like a native iPhone application using modern tools like Backbone.js, \n          zepto.js or CoffeeScript.\n        </p>\n        <p>\n          The application uses a local storage for persistence and is just one static HTML with JS flavor. No backend at all !!<br/>\n          Source code is on <a target="_blank" href="http://github.com/sgruhier/sushi">github</a>\n        </p>\n        <p>\n          Contact me on for any UI/UX/Javascript/Rails development :) <a target="_blank" href="mailto:sebastien.gruhier@xilinus.com">sebastien.gruhier@xilinus.com</a>\n        </p>\n        <p>\n          And please follow me on twitter: <a target="_blank" href="http://twitter.com/sgruhier">sgruhier</a>\n        </p>\n        <p>\n        @ 2011 - Sébastien Gruhier - xilinus\n        </p>\n      </div>\n    </div>\n  </div>\n  <div class="toolbar bottom">\n    <button class="button" id="close_about">Back To Sushi Bill</button>\n  </div>\n</section>\n');
+      __out.push('<div id="about_panel">\n  <div class="wrapper">\n    <div class="scrollable">\n      <div>\n        <h1>About Sushi Bill</h1>\n  \n        <p>\n          This application helps you to manage your bill in sushi restaurant where plates are placed on a rotating conveyor belt.\n        </p>\n        <p>\n          it was also a great opportunity for me to make a web app that behaves exactly like a native iPhone application using modern tools like Backbone.js, \n          zepto.js or CoffeeScript.\n        </p>\n        <p>\n          The application uses a local storage for persistence and is just one static HTML with JS flavor. No backend at all !!<br/>\n          Source code is on <a target="_blank" href="http://github.com/sgruhier/sushi">github</a>\n        </p>\n        <p>\n          Contact me on for any UI/UX/Javascript/Rails development :) <a target="_blank" href="mailto:sebastien.gruhier@xilinus.com">sebastien.gruhier@xilinus.com</a>\n        </p>\n        <p>\n          And please follow me on twitter: <a target="_blank" href="http://twitter.com/sgruhier">sgruhier</a>\n        </p>\n        <p>\n        @ 2011 - Sébastien Gruhier - xilinus\n        </p>\n      </div>\n    </div>\n  </div>\n  <div class="toolbar bottom">\n    <button class="button" id="close_about">Back To Sushi Bill</button>\n  </div>\n</section>\n');
     }).call(this);
     
   }).call(__obj);
@@ -4693,27 +4697,27 @@ window.iScroll = iScroll;
         "-webkit-perspective-origin": "50% " + window.innerHeight / 2 + "px"
       });
     });
-    $.insertSection = function(section, options) {
+    $.insertContent = function(content, options) {
       var current;
       if (options == null) {
         options = {
           direction: 1
         };
       }
-      current = $('body section');
-      $('body').append(section.css({
+      current = $('body > div');
+      $('body').append(content.css({
         left: '-100%'
       }));
-      $.setupIScroll(section);
+      $.setupIScroll(content);
       if (current.length === 0) {
-        return section.css({
+        return content.css({
           left: '0'
         });
       } else {
         current.anim({
           translateX: "" + (-options.direction) + "00%"
         }, 0.25, 'ease-out', slideOutCallback);
-        return section.css({
+        return content.css({
           left: "" + options.direction + "00%"
         }).anim({
           translateX: "" + (-options.direction) + "00%"
@@ -4732,7 +4736,7 @@ window.iScroll = iScroll;
             if (element != null) {
         element;
       } else {
-        element = $('body > section');
+        element = $('body > div');
       };
       scrollable = element.find('.wrapper > .scrollable')[0];
       if (scrollable) {
@@ -4759,10 +4763,10 @@ window.iScroll = iScroll;
       }
     };
     slideOutCallback = function() {
-      var sections;
-      sections = $('body section');
-      sections.first().remove();
-      return sections.last().css({
+      var contents;
+      contents = $('body').children();
+      contents.first().remove();
+      return contents.last().css({
         left: '0%',
         '-webkit-transform': 'none'
       });
@@ -4788,13 +4792,13 @@ window.iScroll = iScroll;
       $('#close_about').live('click', this.hide);
     }
     AboutView.prototype.show = function() {
-      var about, section;
-      section = $('body > section');
+      var about, content;
+      content = $('body > div');
       $('body').append(aboutTemplate());
       about = $("#about_panel");
       $.setupIScroll(about);
-      about.height(section.height() + "px").width(section.width() + "px");
-      $('body > section').addClass('flip');
+      about.height(content.height() + "px").width(content.width() + "px");
+      $('body > div').addClass('flip');
       about.css({
         opacity: 0
       });
@@ -4811,24 +4815,24 @@ window.iScroll = iScroll;
           opacity: 1
         }, 0.4, 'linear');
       });
-      return section.anim({
+      return content.anim({
         rotateY: '90deg',
         scale: 0.8,
         opacity: 0.5
       }, 0.4, 'linear', function() {
-        section.css({
+        content.css({
           opacity: 0
         });
-        return section.anim({
+        return content.anim({
           rotateY: '180deg',
           scale: 1
         }, 0.4, 'linear');
       });
     };
     AboutView.prototype.hide = function() {
-      var about, section;
-      section = $('body > section').first();
-      $('body > section').removeClass('flip');
+      var about, content;
+      content = $('body > div').first();
+      $('body > div').removeClass('flip');
       about = $("#about_panel");
       about.anim({
         rotateY: '-90deg',
@@ -4840,14 +4844,14 @@ window.iScroll = iScroll;
         });
         return about.remove();
       });
-      section.anim({
+      content.anim({
         rotateY: '90deg',
         scale: 0.8
       }, 0.4, 'linear', function() {
-        section.css({
+        content.css({
           opacity: 0.5
         });
-        return section.anim({
+        return content.anim({
           rotateY: '0deg',
           scale: 1,
           opacity: 1
@@ -4920,7 +4924,7 @@ window.iScroll = iScroll;
       this.updateBill = __bind(this.updateBill, this);
       BillView.__super__.constructor.apply(this, arguments);
     }
-    BillView.prototype.tagName = 'section';
+    BillView.prototype.tagName = 'div';
     BillView.prototype.events = {
       'click #reset': 'reset'
     };
@@ -4975,7 +4979,7 @@ window.iScroll = iScroll;
     function PlateEditorView() {
       PlateEditorView.__super__.constructor.apply(this, arguments);
     }
-    PlateEditorView.prototype.tagName = 'section';
+    PlateEditorView.prototype.tagName = 'div';
     PlateEditorView.prototype.events = {
       'change input.price': 'updatePrice',
       'click span.color': 'updateColor'
@@ -5063,7 +5067,7 @@ window.iScroll = iScroll;
     function RestaurantView() {
       RestaurantView.__super__.constructor.apply(this, arguments);
     }
-    RestaurantView.prototype.tagName = 'section';
+    RestaurantView.prototype.tagName = 'div';
     RestaurantView.prototype.id = 'home';
     RestaurantView.prototype.events = {
       'click #add': 'add',

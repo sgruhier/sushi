@@ -4,7 +4,7 @@ PlateView          = require('views/plate_view').PlateView
 Plate              = require('models/plate').Plate
 
 class exports.RestaurantView extends Backbone.View
-  tagName: 'section'
+  tagName: 'div'
   id: 'home'
   
   events: 

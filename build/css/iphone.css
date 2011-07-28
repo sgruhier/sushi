@@ -21,12 +21,12 @@ body {
   height: 100%;
   width: 100%;
 }
-body > section {
+body > div {
   background: #C5CCD3 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAABCAIAAACdaSOZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABdJREFUeNpiPHrmCgMC/GNjYwNSAAEGADdNA3dnzPlQAAAAAElFTkSuQmCC);
   -webkit-perspective-origin: 50% 50%;
 }
 
-body > section {
+body > div {
   display: block;
   left: 0px;
   min-height: 100%;

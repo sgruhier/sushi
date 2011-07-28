@@ -10,13 +10,13 @@ class exports.ApplicationRouter extends Backbone.Router
         
   home: ->
     restaurantView = new RestaurantView(collection: app.restaurant)
-    $.insertSection($(restaurantView.render().el), direction: -1)
+    $.insertContent($(restaurantView.render().el), direction: -1)
       
   editPlate: (id) ->
     plateEditorView = new PlateEditorView model: app.restaurant.get(id)
-    $.insertSection($(plateEditorView.render().el))
+    $.insertContent($(plateEditorView.render().el), direction: 1)
       
   bill: () ->
     billView = new BillView collection: app.restaurant
-    $.insertSection($(billView.render().el))
+    $.insertContent($(billView.render().el), direction: -1)
     

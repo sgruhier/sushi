@@ -3,7 +3,7 @@ Plate         = require('models/plate').Plate
 BillPlateView = require('views/bill_plate_view').BillPlateView
 
 class exports.BillView extends Backbone.View
-  tagName: 'section'
+  tagName: 'div'
   events: 
     'click #reset': 'reset'
   

@@ -7,27 +7,27 @@
   # Set perspective origin to window center
   $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + window.innerHeight/2 + "px")
   
-  $.insertSection= (section, options = direction: 1) ->
-    current = $('body section')
+  $.insertContent= (content, options = direction: 1) ->
+    current = $('body > div')
     
-    $('body').append section.css(left: '-100%')
-    $.setupIScroll(section)
+    $('body').append content.css(left: '-100%')
+    $.setupIScroll(content)
     if current.length == 0
-      # First section in dom, no anim
-      section.css(left: '0')
+      # First content in dom, no anim
+      content.css(left: '0')
     else
-      # Slide out current section 
+      # Slide out current content 
       current.anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out', slideOutCallback)
-      # Slide in new section
-      section.css(left: "#{options.direction}00%").anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
+      # Slide in new content
+      content.css(left: "#{options.direction}00%").anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
  
-  # Setup iScroll for a section if need be
+  # Setup iScroll for a content if need be
   $.setupIScroll= (element = null) ->
     if scroller
       scroller.destroy() 
       scroller = null
 
-    element ?= $('body > section')
+    element ?= $('body > div')
     scrollable = element.find('.wrapper > .scrollable')[0]
 
     if scrollable
@@ -48,11 +48,11 @@
 
   ## PRIVATE METHODS ##
   
-  # callback when slide out is done: remove slided section, update new section position
+  # callback when slide out is done: remove slided content, update new content position
   slideOutCallback= () ->
-    sections = $('body section')
-    sections.first().remove()
-    sections.last().css(left: '0%', '-webkit-transform' : 'none')
+    contents = $('body').children()
+    contents.first().remove()
+    contents.last().css(left: '0%', '-webkit-transform' : 'none')
 
   # Update wrapper for iscroll
   setWrapperHeight= (element) ->

@@ -3,7 +3,7 @@ Plate               = require('models/plate').Plate
 
 
 class exports.PlateEditorView extends Backbone.View
-  tagName: 'section'
+  tagName: 'div'
   events: 
     'change input.price': 'updatePrice'
     'click span.color': 'updateColor'
