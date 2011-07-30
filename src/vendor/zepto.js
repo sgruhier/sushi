@@ -589,6 +589,13 @@ var Zepto = (function() {
     });
   };
 
+  // add support to all events supported with jQuery which are simple wrappers for native events
+  ('blur focus focusin focusout load resize scroll unload click dblclick '+
+  'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '+
+  'change select submit keydown keypress keyup error').split(' ').forEach(function(event) {
+    $.fn[event] = function(callback){ return this.bind(event, callback) };
+  });
+
   $.Event = function(src, props) {
     var event = document.createEvent('Events');
     if (props) $.extend(event, props);
@@ -658,11 +665,12 @@ var Zepto = (function() {
   $.fn.anim = function(properties, duration, ease, callback){
     var transforms = [], cssProperties = {}, key, that = this, wrappedCallback;
 
-    for (key in properties) 
-      if (supportedTransforms.indexOf(key)>=0) 
+    for (key in properties)
+      if (supportedTransforms.indexOf(key)>=0)
         transforms.push(key + '(' + properties[key] + ')');
       else
         cssProperties[key] = properties[key];
+
     wrappedCallback = function(){
       that.css({'-webkit-transition':'none'});
       callback && callback();
@@ -1017,12 +1025,13 @@ var Zepto = (function() {
   //     ]
   //
   $.fn.serializeArray = function () {
-    var result = [];
+    var result = [], el;
     $( Array.prototype.slice.call(this.get(0).elements) ).each(function () {
-      if ( $(this).attr('type') !== 'radio' || $(this).is(':checked') ) {
+      el = $(this);
+      if ( (el.attr('type') !== 'radio' || el.is(':checked')) && !(el.attr('type') === 'checkbox' && !el.is(':checked'))) {
         result.push({
-          name: $(this).attr('name'),
-          value: $(this).val()
+          name: el.attr('name'),
+          value: el.val()
         });
       }
     });
@@ -1102,6 +1111,14 @@ var Zepto = (function() {
     }
   }
 
+  var longTapDelay = 750;
+  function longTap(){
+    if (touch.last && (Date.now() - touch.last >= longTapDelay)) {
+      $(touch.target).trigger('longTap');
+      touch = {};
+    }
+  }
+
   $(document).ready(function(){
     $(document.body).bind('touchstart', function(e){
       var now = Date.now(), delta = now - (touch.last || now);
@@ -1111,6 +1128,7 @@ var Zepto = (function() {
       touch.y1 = e.touches[0].pageY;
       if (delta > 0 && delta <= 250) touch.isDoubleTap = true;
       touch.last = now;
+      setTimeout(longTap, longTapDelay);
     }).bind('touchmove', function(e){
       touch.x2 = e.touches[0].pageX;
       touch.y2 = e.touches[0].pageY;
@@ -1133,7 +1151,7 @@ var Zepto = (function() {
     }).bind('touchcancel', function(){ touch = {} });
   });
 
-  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap'].forEach(function(m){
+  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'longTap'].forEach(function(m){
     $.fn[m] = function(callback){ return this.bind(m, callback) }
   });
 })(Zepto);
