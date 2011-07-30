@@ -18,5 +18,5 @@ class exports.ApplicationRouter extends Backbone.Router
       
   bill: () ->
     billView = new BillView collection: app.restaurant
-    $.insertContent($(billView.render().el), direction: -1)
+    $.insertContent($(billView.render().el), direction: 1)
     
