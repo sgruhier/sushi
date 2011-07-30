@@ -1,17 +1,24 @@
+# Add-on to zepto.js for easier iphone UI development
 # Slide in/out iphone animation
-# Keep wrapper height
+# Flip back/frony
+# Support for iScroller if available
+# Convert color rgb(r,g,b,a) to hex
+
 (($) ->
   scroller     = null
   windowHeight =  window.innerHeight
+  scale        = 0.8
 
   # Set perspective origin to window center
-  $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + window.innerHeight/2 + "px")
+  $('body').bind('touchmove', (e) -> e.preventDefault())
+  $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + windowHeight + "px")
   
   $.insertContent= (content, options = direction: 1) ->
-    current = $('body > div')
-    
+    current = $('body > div:first-child')    
     $('body').append content.css(left: '-100%')
+
     $.setupIScroll(content)
+    
     if current.length == 0
       # First content in dom, no anim
       content.css(left: '0')
@@ -21,18 +28,53 @@
       # Slide in new content
       content.css(left: "#{options.direction}00%").anim(translateX: "#{-options.direction}00%", 0.25, 'ease-out')
  
-  # Setup iScroll for a content if need be
-  $.setupIScroll= (element = null) ->
-    if scroller
-      scroller.destroy() 
-      scroller = null
+  $.flip= (content) ->
+    $('body').append content
+    front = $('body > div:first-child')
+    back  = $('body > div:last-child')
+    $.setupIScroll back
 
-    element ?= $('body > div')
-    scrollable = element.find('.wrapper > .scrollable')[0]
+    # Update back size
+    back.height(front.height() + "px").width(front.width() + "px")
 
-    if scrollable
-      setWrapperHeight(element)
-      scroller = new iScroll(scrollable) 
+    $('body > div').addClass('flip')
+    back.css opacity: 0
+    back.anim({rotateY: '-90deg', scale: scale}, 0.4, 'ease-in', () ->
+      back.anim({rotateY: '0deg', scale: 1, opacity: 1}, 0.4, 'ease-out')
+    )
+    front.anim({rotateY: '90deg', scale: scale, opacity: 0}, 0.4, 'ease-in', () ->
+      front.anim({rotateY: '180deg', scale: 1,}, 0.4, 'ease-out')
+    )
+  
+  $.flipBack= () ->
+    back  = $('body > div:first-child')
+    front = $('body > div:last-child')
+
+    $('body > div').removeClass('flip')
+    front.anim({rotateY: '-90deg', scale: scale, opacity: 0}, 0.4, 'ease-in', () ->
+      front.remove()
+    )
+    back.anim({rotateY: '90deg', scale: scale}, 0.4, 'ease-in', () ->
+      back.css opacity: 0
+      back.anim({rotateY: '0deg', scale: 1, opacity: 1}, 0.4, 'ease-out')
+    )
+    $.setupIScroll back
+    
+   # Setup iScroll for a content if need be and if available
+   $.setupIScroll= (element = null) ->
+     return if typeof iScroll == "undefined"
+     if scroller
+       scroller.destroy() 
+       scroller = null
+  
+     element ?= $('body > div:first-child')
+  
+     scrollable = element.find('.wrapper > .scrollable')[0]
+  
+     if scrollable
+       setWrapperHeight(element)
+       scroller = new iScroll(scrollable) 
+
 
   # Convert rgb(12,5,200) to <prefix>0c05c8
   $.hexColorFromString = (color, prefix = '') ->
