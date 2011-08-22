@@ -601,6 +601,13 @@ var Zepto = (function() {
     });
   };
 
+  // add support to all events supported with jQuery which are simple wrappers for native events
+  ('blur focus focusin focusout load resize scroll unload click dblclick '+
+  'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave '+
+  'change select submit keydown keypress keyup error').split(' ').forEach(function(event) {
+    $.fn[event] = function(callback){ return this.bind(event, callback) };
+  });
+
   $.Event = function(src, props) {
     var event = document.createEvent('Events');
     if (props) $.extend(event, props);
@@ -670,11 +677,12 @@ var Zepto = (function() {
   $.fn.anim = function(properties, duration, ease, callback){
     var transforms = [], cssProperties = {}, key, that = this, wrappedCallback;
 
-    for (key in properties) 
-      if (supportedTransforms.indexOf(key)>=0) 
+    for (key in properties)
+      if (supportedTransforms.indexOf(key)>=0)
         transforms.push(key + '(' + properties[key] + ')');
       else
         cssProperties[key] = properties[key];
+
     wrappedCallback = function(){
       that.css({'-webkit-transition':'none'});
       callback && callback();
@@ -1029,12 +1037,13 @@ var Zepto = (function() {
   //     ]
   //
   $.fn.serializeArray = function () {
-    var result = [];
+    var result = [], el;
     $( Array.prototype.slice.call(this.get(0).elements) ).each(function () {
-      if ( $(this).attr('type') !== 'radio' || $(this).is(':checked') ) {
+      el = $(this);
+      if ( (el.attr('type') !== 'radio' || el.is(':checked')) && !(el.attr('type') === 'checkbox' && !el.is(':checked'))) {
         result.push({
-          name: $(this).attr('name'),
-          value: $(this).val()
+          name: el.attr('name'),
+          value: el.val()
         });
       }
     });
@@ -1114,6 +1123,14 @@ var Zepto = (function() {
     }
   }
 
+  var longTapDelay = 750;
+  function longTap(){
+    if (touch.last && (Date.now() - touch.last >= longTapDelay)) {
+      $(touch.target).trigger('longTap');
+      touch = {};
+    }
+  }
+
   $(document).ready(function(){
     $(document.body).bind('touchstart', function(e){
       var now = Date.now(), delta = now - (touch.last || now);
@@ -1123,6 +1140,7 @@ var Zepto = (function() {
       touch.y1 = e.touches[0].pageY;
       if (delta > 0 && delta <= 250) touch.isDoubleTap = true;
       touch.last = now;
+      setTimeout(longTap, longTapDelay);
     }).bind('touchmove', function(e){
       touch.x2 = e.touches[0].pageX;
       touch.y2 = e.touches[0].pageY;
@@ -1145,7 +1163,7 @@ var Zepto = (function() {
     }).bind('touchcancel', function(){ touch = {} });
   });
 
-  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap'].forEach(function(m){
+  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'longTap'].forEach(function(m){
     $.fn[m] = function(callback){ return this.bind(m, callback) }
   });
 })(Zepto);
@@ -4276,6 +4294,9 @@ window.iScroll = iScroll;
   Plate = require('models/plate').Plate;
   AboutView = require('views/about_view').AboutView;
   $(document).ready(function() {
+    if (!($.os.ios || document.location.href.match('no_check'))) {
+      document.location.href = "/index_web.html";
+    }
     app.initialize = function() {
       app.restaurant = new Restaurant;
       app.router = new ApplicationRouter;
@@ -4380,7 +4401,7 @@ window.iScroll = iScroll;
         collection: app.restaurant
       });
       return $.insertContent($(billView.render().el), {
-        direction: -1
+        direction: 1
       });
     };
     return ApplicationRouter;
@@ -4689,12 +4710,16 @@ window.iScroll = iScroll;
   return __out.join('');
 }}, "utils/iphone": function(exports, require, module) {(function() {
   (function($) {
-    var scroller, setWrapperHeight, slideOutCallback, windowHeight;
+    var scale, scroller, setWrapperHeight, slideOutCallback, windowHeight;
     scroller = null;
     windowHeight = window.innerHeight;
+    scale = 0.8;
+    $('body').bind('touchmove', function(e) {
+      return e.preventDefault();
+    });
     $(document).ready(function() {
       return $('body').css({
-        "-webkit-perspective-origin": "50% " + window.innerHeight / 2 + "px"
+        "-webkit-perspective-origin": "50% " + windowHeight / 2 + "px"
       });
     });
     $.insertContent = function(content, options) {
@@ -4704,7 +4729,7 @@ window.iScroll = iScroll;
           direction: 1
         };
       }
-      current = $('body > div');
+      current = $('body > div:first-child');
       $('body').append(content.css({
         left: '-100%'
       }));
@@ -4724,10 +4749,72 @@ window.iScroll = iScroll;
         }, 0.25, 'ease-out');
       }
     };
+    $.flip = function(content) {
+      var back, front;
+      $('body').append(content);
+      front = $('body > div:first-child');
+      back = $('body > div:last-child');
+      $.setupIScroll(back);
+      back.height(front.height() + "px").width(front.width() + "px");
+      $('body > div').addClass('flip');
+      back.css({
+        opacity: 0
+      });
+      back.anim({
+        rotateY: '-90deg',
+        scale: scale
+      }, 0.4, 'ease-in', function() {
+        return back.anim({
+          rotateY: '0deg',
+          scale: 1,
+          opacity: 1
+        }, 0.4, 'ease-out');
+      });
+      return front.anim({
+        rotateY: '90deg',
+        scale: scale,
+        opacity: 0
+      }, 0.4, 'ease-in', function() {
+        return front.anim({
+          rotateY: '180deg',
+          scale: 1
+        }, 0.4, 'ease-out');
+      });
+    };
+    $.flipBack = function() {
+      var back, front;
+      back = $('body > div:first-child');
+      front = $('body > div:last-child');
+      $('body > div').removeClass('flip');
+      front.anim({
+        rotateY: '-90deg',
+        scale: scale,
+        opacity: 0
+      }, 0.4, 'ease-in', function() {
+        return front.remove();
+      });
+      back.anim({
+        rotateY: '90deg',
+        scale: scale
+      }, 0.4, 'ease-in', function() {
+        back.css({
+          opacity: 0
+        });
+        return back.anim({
+          rotateY: '0deg',
+          scale: 1,
+          opacity: 1
+        }, 0.4, 'ease-out');
+      });
+      return $.setupIScroll(back);
+    };
     $.setupIScroll = function(element) {
       var scrollable;
       if (element == null) {
         element = null;
+      }
+      if (typeof iScroll === "undefined") {
+        return;
       }
       if (scroller) {
         scroller.destroy();
@@ -4736,7 +4823,7 @@ window.iScroll = iScroll;
             if (element != null) {
         element;
       } else {
-        element = $('body > div');
+        element = $('body > div:first-child');
       };
       scrollable = element.find('.wrapper > .scrollable')[0];
       if (scrollable) {
@@ -4792,72 +4879,10 @@ window.iScroll = iScroll;
       $('#close_about').live('click', this.hide);
     }
     AboutView.prototype.show = function() {
-      var about, content;
-      content = $('body > div');
-      $('body').append(aboutTemplate());
-      about = $("#about_panel");
-      $.setupIScroll(about);
-      about.height(content.height() + "px").width(content.width() + "px");
-      $('body > div').addClass('flip');
-      about.css({
-        opacity: 0
-      });
-      about.anim({
-        rotateY: '-90deg',
-        scale: 0.8
-      }, 0.4, 'linear', function() {
-        about.css({
-          opacity: 0.5
-        });
-        return about.anim({
-          rotateY: '0deg',
-          scale: 1,
-          opacity: 1
-        }, 0.4, 'linear');
-      });
-      return content.anim({
-        rotateY: '90deg',
-        scale: 0.8,
-        opacity: 0.5
-      }, 0.4, 'linear', function() {
-        content.css({
-          opacity: 0
-        });
-        return content.anim({
-          rotateY: '180deg',
-          scale: 1
-        }, 0.4, 'linear');
-      });
+      return $.flip(aboutTemplate());
     };
     AboutView.prototype.hide = function() {
-      var about, content;
-      content = $('body > div').first();
-      $('body > div').removeClass('flip');
-      about = $("#about_panel");
-      about.anim({
-        rotateY: '-90deg',
-        scale: 0.8,
-        opacity: 0.5
-      }, 0.4, 'linear', function() {
-        about.css({
-          opacity: 0
-        });
-        return about.remove();
-      });
-      content.anim({
-        rotateY: '90deg',
-        scale: 0.8
-      }, 0.4, 'linear', function() {
-        content.css({
-          opacity: 0.5
-        });
-        return content.anim({
-          rotateY: '0deg',
-          scale: 1,
-          opacity: 1
-        }, 0.4, 'linear');
-      });
-      return $.setupIScroll(section);
+      return $.flipBack();
     };
     return AboutView;
   })();

@@ -8,6 +8,9 @@ AboutView         = require('views/about_view').AboutView
 
 # app bootstrapping on document ready
 $(document).ready ->
+  unless $.os.ios || document.location.href.match('no_check')
+    document.location.href = "/index_web.html"  
+
   app.initialize = ->
     app.restaurant  = new Restaurant
     app.router      = new ApplicationRouter
@@ -20,6 +23,5 @@ $(document).ready ->
     
   app.initialize()
   Backbone.history.start()
-  
 
   

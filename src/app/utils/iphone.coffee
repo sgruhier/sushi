@@ -11,7 +11,7 @@
 
   # Set perspective origin to window center
   $('body').bind('touchmove', (e) -> e.preventDefault())
-  $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + windowHeight + "px")
+  $(document).ready -> $('body').css("-webkit-perspective-origin" : "50% " + windowHeight/2 + "px")
   
   $.insertContent= (content, options = direction: 1) ->
     current = $('body > div:first-child')    
