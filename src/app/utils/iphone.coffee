@@ -6,7 +6,7 @@
 
 (($) ->
   scroller     = null
-  windowHeight =  window.innerHeight
+  windowHeight =  window.innerHeight || 460
   scale        = 0.8
 
   # Set perspective origin to window center
