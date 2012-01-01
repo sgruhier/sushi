@@ -27,7 +27,7 @@ div{top:0;-webkit-transform-style:preserve-3d;-webkit-backface-visibility:hidden
 ul.menu li label{font-size:22px;float:left}
 ul.menu li input{-webkit-appearance:none;border:0;font-size:22px;float:left;width:200px;margin-left:10px}
 .wrapper{position:relative;z-index:1;width:100%;overflow:hidden}
-div.bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.50) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;text-shadow:1px 1px 1px #000;top:auto}
+div.bottom{font-family:inherit;font-weight:bold;color:#fff;text-shadow:rgba(0,0,0,0.5) 0 -1px 0;text-overflow:ellipsis;text-decoration:none;white-space:nowrap;text-shadow:1px 1px 1px #000;top:auto}
 #add,#remove{position:static;float:left;margin:-2px 10px 0 0}
 #bill,#about{position:static;float:right;margin:-2px 10px 0 0}
 #back_to_home{position:absolute;top:auto;bottom:5px;right:5px}

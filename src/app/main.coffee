@@ -9,7 +9,7 @@ AboutView         = require('views/about_view').AboutView
 # app bootstrapping on document ready
 $(document).ready ->
   if typeof $.os.ios == "undefined" && ! document.location.href.match('no_check') 
-    document.location.href = "file:///Users/seb/Developer/Javascripts/sushi/build/index_web.html"  
+    document.location.href = "./index_web.html"  
 
   app.initialize = ->
     app.restaurant  = new Restaurant

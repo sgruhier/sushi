@@ -4032,7 +4032,7 @@ window.iScroll = iScroll;
   AboutView = require('views/about_view').AboutView;
   $(document).ready(function() {
     if (typeof $.os.ios === "undefined" && !document.location.href.match('no_check')) {
-      document.location.href = "file:///Users/seb/Developer/Javascripts/sushi/build/index_web.html";
+      document.location.href = "./index_web.html";
     }
     app.initialize = function() {
       app.restaurant = new Restaurant;
@@ -4557,9 +4557,11 @@ window.iScroll = iScroll;
         scroller.destroy();
         scroller = null;
       }
-      if (element == null) {
+            if (element != null) {
+        element;
+      } else {
         element = $('body > div:first-child');
-      }
+      };
       scrollable = element.find('.wrapper > .scrollable')[0];
       if (scrollable) {
         setWrapperHeight(element);
